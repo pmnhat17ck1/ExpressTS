@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Dev ServerAPI",
+            "command": "npm run dev"
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Start ServerAPI",
+            "command": "npm run start"
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Lint ServerAPI",
+            "command": "npm run lint"
+        },
+        {
+            "type": "node-terminal",
+            "request": "launch",
+            "name": "Lint:Fix ServerAPI",
+            "command": "npm run lint:fix"
+        }
+    ]
+}
