@@ -37,8 +37,14 @@ export default function (sequelize: Sequelize): typeof Token {
           key: "id",
         },
       },
-      accessToken: DataTypes.STRING,
-      refreshToken: DataTypes.STRING,
+      accessToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      refreshToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       type: DataTypes.STRING,
     },
     {

@@ -4,10 +4,7 @@ import { hashSync } from "bcrypt";
 
 import { AccountI } from "@/interfaces/account.interface";
 
-export type AccountCreationAttributes = Optional<
-  AccountI,
-  "id" | "username" | "phone" | "email" | "is_active" | "password"
->;
+export type AccountCreationAttributes = Optional<AccountI, "id">;
 
 export class Account
   extends Model<AccountI, AccountCreationAttributes>

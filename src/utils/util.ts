@@ -22,7 +22,7 @@ export const isEmailOrPhone = (input) => {
     return "email";
   }
   // Kiểm tra xem input có khớp với định dạng số điện thoại hay không
-  const phoneRegex = /^[0-9]{10,}$/;
+  const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
   if (phoneRegex.test(input)) {
     return "phone";
   }

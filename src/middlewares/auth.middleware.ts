@@ -1,7 +1,6 @@
 import { Response, NextFunction } from "express";
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import db from "../models";
-import config from "../config";
 import { generateAccessToken } from "../utils/generate.util";
 import { verifyToken } from "../utils/common.util";
 
@@ -24,7 +23,7 @@ export const authenticate = async (
     let account = {};
     try {
       payload = verifyToken(token, process.env.ACCESS_TOKEN_SECRET);
-      account = await Account.findByPk(payload.accountId);
+      account = await Account.findByPk(payload.account_id);
       if (!account) {
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -32,12 +31,16 @@ export const authenticate = async (
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         const newAccessToken = generateAccessToken({
-          accountId: payload.accountId,
+          account_id: payload.account_id,
         });
         const getToken = await Token.findOne({
           where: {
             accessToken: token,
           },
+          raw: true,
+        });
+        await getToken.update({
+          accessToken: newAccessToken,
         });
         if (!getToken) {
           await Token.create({

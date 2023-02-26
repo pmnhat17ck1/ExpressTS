@@ -1,5 +1,5 @@
 export interface AccountCountryI {
-  id: number;
-  country_id: number;
+  id: string;
+  country_id: string;
   account_id: string;
 }

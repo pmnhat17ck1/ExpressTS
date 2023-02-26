@@ -1,61 +1,71 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
-
 import { compareSync } from "bcrypt";
+
 import db from "@/models";
 import { isEmailOrPhone } from "@/utils/util";
 import { generate } from "@/utils/index";
-const { Account, AccountCountry, Token } = db;
+import { generateAccessToken } from "../utils/generate.util";
+
+const { Account, AccountRole, AccountCountry, Token } = db;
 
 const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password, token } = req.body;
-  let username = "";
-  let phone = "";
-  let emailChecked = "";
+  const { email, password } = req.body;
+
+  const input = { email: "", username: "", phone: "" };
+
   switch (isEmailOrPhone(email)) {
     case "phone":
-      phone = email;
-      return;
+      input["phone"] = email;
+      break;
     case "email":
-      emailChecked = email;
-      return;
+      input["email"] = email;
+      break;
     default:
-      username = email;
+      input["username"] = email;
+      break;
   }
 
   try {
-    const user = await Account.findOne({
+    const account = await Account.findOne({
       where: {
-        [Op.or]: [{ email: emailChecked }, { username: username }, { phone }],
+        [Op.or]: [
+          { email: input.email },
+          { username: input.username },
+          { phone: input.phone },
+        ],
       },
-      include: [
-        {
-          model: Token,
-          attributes: ["accessToken"],
-        },
-      ],
       attributes: {
         exclude: ["created_at", "updated_at"],
       },
-      nest: true,
     });
 
-    if (!user) {
+    if (!account) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-
-    if (!compareSync(password, user.password)) {
+    if (!compareSync(password, account.password)) {
       res.status(401).json({ message: "Incorrect password" });
       return;
     }
-    if (user?.accessToken) {
+    const newAccessToken = generateAccessToken({
+      account_id: account?.id,
+    });
+    const tokenAccount = await Token.findOne({
+      where: {
+        account_id: account.id,
+      },
+    });
+    if (!tokenAccount.accessToken) {
+      tokenAccount.update({
+        accessToken: newAccessToken,
+      });
+      res.setHeader("Authorization", `Bearer ${newAccessToken}`);
       res.status(200).json({ message: "Login success!" });
       return;
     }
-    const accessToken = generate.generateAccessToken({ userId: user?.id });
-    res.setHeader("Authorization", `Bearer ${accessToken}`);
-    res.json({ accessToken });
+    res.setHeader("Authorization", `Bearer ${tokenAccount.accessToken}`);
+    res.status(200).json({ message: "Login success!" });
   } catch (error) {
     res.status(500).json();
   }
@@ -65,32 +75,31 @@ const signup = async (req: Request, res: Response): Promise<void> => {
   const { email, username, phone, password } = req.body ?? {};
 
   try {
-    const foundUser = await Account.findOne({
-      where: {
-        [Op.or]: [{ email }, { username }, { phone }],
-      },
-    });
-    if (!foundUser) {
-      res.status(409).json({ message: "User already exist!" });
-      return;
-    }
-
     const newUser = await Account.create({
       username,
       email,
       phone,
       password,
     });
-
-    await AccountCountry.create({
-      country_id: 2,
+    await AccountRole.create({
+      role_id: "2",
       account_id: newUser?.id,
     });
+    await AccountCountry.create({
+      country_id: "1",
+      account_id: newUser?.id,
+    });
+
     const accessToken = generate.generateAccessToken({ userId: newUser?.id });
+    await Token.create({
+      account_id: newUser.id,
+      accessToken: accessToken,
+      type: "auth",
+    });
     res.setHeader("Authorization", `Bearer ${accessToken}`);
-    res.json({ accessToken });
+    res.status(200).json({ message: "Signup success!" });
   } catch (error) {
-    res.status(500).json();
+    res.status(500).json({ message: "Signup fail!" });
   }
 };
 // LOG OUT

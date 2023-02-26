@@ -9,7 +9,7 @@ export class AccountCountry
   implements AccountCountry
 {
   public id!: number;
-  public country_id!: number;
+  public country_id!: string;
   public account_id!: string;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -23,22 +23,8 @@ export default function (sequelize: Sequelize): typeof AccountCountry {
         autoIncrement: true,
         primaryKey: true,
       },
-      account_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "accounts",
-          key: "id",
-        },
-      },
-      country_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "countries",
-          key: "id",
-        },
-      },
+      account_id: DataTypes.UUID,
+      country_id: DataTypes.UUID,
     },
     {
       modelName: "AccountCountry",

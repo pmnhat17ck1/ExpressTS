@@ -1,27 +1,27 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models";
+import db from "../models";
 import { checkExpiredToken } from "../utils/common.util";
 
 const verifyToken = (req: any, res: any, next: any): any => {
   try {
     const token = req.headers.authorization;
     if (token) {
-      const serectKey = process.env.JWT_ACCESS_KEY;
+      const serectKey = process.env.ACCESS_TOKEN_SECRET;
       const accessToken = token.split(" ")[1];
       jwt.verify(accessToken, serectKey ?? "", async (err: any, item: any) => {
         if (err) {
           return res.status(403).json("Token is not valid!");
         }
-        const user = await User.findOne({
+        const account = await db.Account.findOne({
           where: {
-            id: item.user_id,
+            id: item.account_id,
           },
           raw: true,
         });
-        if (!user) {
+        if (!account) {
           return res.status(500).json("You're not authenticated!");
         }
-        req.user = user;
+        req.account = account;
         next();
       });
     } else {
@@ -47,7 +47,7 @@ const verifyTokenRefresh = (req: any, res: any, next: any): any => {
         if (refreshExpired) {
           return res.status(500).json("Refresh token was expired!");
         }
-        req.user_id = item.user_id;
+        req.account_id = item.account_id;
         next();
       });
     } else {
@@ -82,12 +82,9 @@ const verifyTokenAndAdmin = (req: any, res: any, next: any): any => {
   });
 };
 
-const verifyAdmin = (req: any, res: any, next: any): any => {};
-
 export {
   verifyToken,
   verifyTokenAndUserAuthorization,
   verifyTokenAndAdmin,
   verifyTokenRefresh,
-  verifyAdmin,
 };

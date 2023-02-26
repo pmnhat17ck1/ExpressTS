@@ -11,8 +11,8 @@ module.exports = {
         id: idAdmin,
         username: "admin",
         password: hashSync("admin@adminsn", 10),
-        phone: "77777777",
-        email: "admin@admin.com",
+        phone: "0386487072",
+        email: "admin123@gmail.com",
         is_active: true,
         created_at: new Date(),
         updated_at: new Date(),
@@ -24,6 +24,19 @@ module.exports = {
         account_id: idAdmin,
         created_at: new Date(),
         updated_at: new Date(),
+      },
+    ]);
+    await queryInterface.bulkInsert("account_role", [
+      {
+        role_id: "1",
+        account_id: idAdmin,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    ]);
+    await queryInterface.bulkInsert("tokens", [
+      {
+        account_id: idAdmin,
       },
     ]);
   },

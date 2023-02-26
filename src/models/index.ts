@@ -87,7 +87,7 @@ const associations = () => {
     onDelete: "CASCADE",
   });
 
-  Account.hasMany(Token, {
+  Account.hasOne(Token, {
     foreignKey: "account_id",
     onDelete: "CASCADE",
   });

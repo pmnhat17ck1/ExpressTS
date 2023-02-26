@@ -1,5 +1,5 @@
 export interface AccountRoleI {
   id: string;
-  role_id: number;
+  role_id: string;
   account_id: string;
 }
