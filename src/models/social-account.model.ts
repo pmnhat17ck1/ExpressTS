@@ -1,55 +1,66 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-export = (sequelize: Sequelize) => {
-  class SocialAccount extends Model {
-    public id!: string;
+import { SocialAccountI } from "@/interfaces/social-account.interface";
 
-    public userId!: number;
+export type SocialAccountCreationAttributes = Optional<
+  SocialAccountI,
+  "id" | "provider_account_id" | "extraData"
+>;
 
-    public provider!: string;
+export class SocialAccount
+  extends Model<SocialAccountI, SocialAccountCreationAttributes>
+  implements SocialAccount
+{
+  public id!: string;
+  public account_id!: number;
+  public provider!: string;
+  public providerAccount_id!: string;
+  public extraData!: string;
 
-    public providerUserId!: string;
+  public readonly created_at!: Date;
+  public readonly updatedAt!: Date;
+}
 
-  }
+export default function (sequelize: Sequelize): typeof SocialAccount {
   SocialAccount.init(
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: () => uuidv4(),
+        defaultValue: uuidv4(),
         primaryKey: true,
       },
-      userId: {
+      account_id: {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "users",
+          model: "accounts",
           key: "id",
         },
       },
-      provider: {
+      provider_id: {
         type: DataTypes.STRING,
         allowNull: false,
+        references: {
+          model: "SocialApplication",
+          key: "id",
+        },
       },
-      providerUserId: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      accessToken: {
+      provider_account_id: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      refreshToken: {
-        type: DataTypes.STRING,
+      extraData: {
+        type: DataTypes.JSON,
         allowNull: true,
       },
     },
     {
-      sequelize,
-      tableName: "social_account",
       modelName: "SocialAccount",
+      tableName: "social_account",
+      sequelize,
     }
   );
 
   return SocialAccount;
-};
+}

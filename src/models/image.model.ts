@@ -1,27 +1,29 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-export = (sequelize: Sequelize) => {
-  class Image extends Model {
-    public id!: string;
+import { ImageI } from "@/interfaces/image.interface";
 
-    public url!: string;
+export type ImageCreationAttributes = Optional<
+  ImageI,
+  "id" | "url" | "created_at" | "updated_at"
+>;
 
-    public created_at!: Date;
+export class Image
+  extends Model<ImageI, ImageCreationAttributes>
+  implements Image
+{
+  public id!: string;
+  public url!: string;
+  public created_at!: Date;
+  public updated_at!: Date;
+}
 
-    public updated_at!: Date;
-
-    public static associate = (models: any): any => {
-      Image.belongsTo(models.User, {
-        foreignKey: "userDetailId",
-      });
-    };
-  }
+export default function (sequelize: Sequelize): typeof Image {
   Image.init(
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: () => uuidv4(),
+        defaultValue: uuidv4(),
         primaryKey: true,
       },
       url: {
@@ -40,11 +42,11 @@ export = (sequelize: Sequelize) => {
       },
     },
     {
-      tableName: "images",
       modelName: "Image",
+      tableName: "images",
       sequelize,
     }
   );
 
   return Image;
-};
+}

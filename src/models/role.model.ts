@@ -1,21 +1,14 @@
-import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-import { RoleI } from '@/interfaces/role.interface';
+import { RoleI } from "@/interfaces/role.interface";
 
-export type RoleCreationAttributes = Optional<RoleI, 'id' | 'name'>;
+export type RoleCreationAttributes = Optional<RoleI, "id" | "name">;
 
 export class Role extends Model<RoleI, RoleCreationAttributes> implements Role {
   public id: number;
   public name: string;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-
-  public static associate = (models: any): any => {
-    Role.belongsToMany(models.User, {
-      through: models.UserRole,
-      foreignKey: 'roleId',
-    });
-  };
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
 }
 
 export default function (sequelize: Sequelize): typeof Role {
@@ -24,18 +17,19 @@ export default function (sequelize: Sequelize): typeof Role {
       id: {
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.NUMBER.UNSIGNED,
+        type: DataTypes.INTEGER,
       },
       name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },
     {
-      modelName: 'Role',
-      tableName: 'roles',
+      timestamps: false,
+      modelName: "Role",
+      tableName: "roles",
       sequelize,
-    },
+    }
   );
 
   return Role;

@@ -1,22 +1,24 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 
-export = (sequelize: Sequelize) => {
-  class Country extends Model {
-    public id!: number;
+import { CountryI } from "@/interfaces/country.interface";
 
-    public name!: string;
+export type CountryCreationAttributes = Optional<
+  CountryI,
+  "id" | "name" | "code"
+>;
 
-    public readonly createdAt!: Date;
+export class Country
+  extends Model<CountryI, CountryCreationAttributes>
+  implements Country
+{
+  public id!: number;
+  public name!: string;
+  public code!: string;
+  public readonly created_at!: Date;
+  public readonly updated_at!: Date;
+}
 
-    public readonly updatedAt!: Date;
-
-    public static associate = (models: any): any => {
-      Country.belongsToMany(models.User, {
-        through: models.CountryUser,
-        foreignKey: "country_id",
-      });
-    };
-  }
+export default function (sequelize: Sequelize): typeof Country {
   Country.init(
     {
       id: {
@@ -25,15 +27,21 @@ export = (sequelize: Sequelize) => {
         primaryKey: true,
       },
       name: {
-        type: new DataTypes.STRING(128),
+        type: DataTypes.STRING(128),
+        allowNull: false,
+      },
+      code: {
+        type: DataTypes.STRING(10),
         allowNull: false,
       },
     },
     {
-      tableName: "countries",
+      timestamps: false,
       modelName: "Country",
+      tableName: "countries",
       sequelize,
     }
   );
+
   return Country;
-};
+}

@@ -1,12 +1,16 @@
 {
-    "watch": [
-        "src",
-        ".env"
-    ],
-    "ext": "js,ts,json",
-    "ignore": [
-        "src/logs/*",
-        "src/**/*.{spec,test}.ts"
-    ],
-    "exec": "ts-node -r tsconfig-paths/register --transpile-only src/server.ts"
+  "watch": [
+      "src",
+      ".env"
+  ],
+  "ext": "js,ts,json",
+  "ignore": [
+      "src/logs/*",
+      "src/**/*.{spec,test}.ts"
+  ],
+  "events": {
+    "crash": "echo 'Application crashed!'",
+    "restart": "echo 'Application restarted.'"
+  },
+  "exec": "ts-node -r tsconfig-paths/register --transpile-only src/index.ts"
 }

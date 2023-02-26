@@ -1,9 +1,7 @@
-export interface SocialAccount {
+export interface SocialAccountI {
   id: string;
-
-  userId: number;
-
-  provider: string;
-
-  providerUserId: string;
+  account_id: string;
+  provider_id: number;
+  provider_account_id: string;
+  extraData: string;
 }
