@@ -34,7 +34,7 @@ export default function (sequelize: Sequelize): typeof Task {
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: uuidv4(),
+        defaultValue: () => uuidv4(),
         primaryKey: true,
       },
       title: {

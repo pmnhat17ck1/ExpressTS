@@ -27,7 +27,7 @@ export default function (sequelize: Sequelize): typeof SocialAccount {
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: uuidv4(),
+        defaultValue: () => uuidv4(),
         primaryKey: true,
       },
       account_id: {

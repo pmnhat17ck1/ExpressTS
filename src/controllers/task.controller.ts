@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import db from "@/models";
 
 const { Task } = db;
+
 export const getAllTasks = async (
   req: Request,
   res: Response

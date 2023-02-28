@@ -16,16 +16,24 @@ export const isEmpty = (value: string | number | object): boolean => {
   }
 };
 export const isEmailOrPhone = (input) => {
-  // Kiểm tra xem input có khớp với định dạng email hay không
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (emailRegex.test(input)) {
     return "email";
   }
-  // Kiểm tra xem input có khớp với định dạng số điện thoại hay không
   const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
   if (phoneRegex.test(input)) {
     return "phone";
   }
-  // Nếu input không khớp với định dạng nào cả, trả về false
   return "username";
+};
+
+export const isString = (data) =>
+  typeof data === "string" || data instanceof String;
+
+export const isArray = (data) => Array.isArray(data);
+
+export const isObject = (data) => !isArray(data) && data === Object(data);
+
+export const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };

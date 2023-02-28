@@ -4,28 +4,36 @@ import { compareSync } from "bcrypt";
 
 import db from "@/models";
 import { isEmailOrPhone } from "@/utils/util";
-import { generate } from "@/utils/index";
-import { generateAccessToken } from "../utils/generate.util";
-
+import { generate, validator, response } from "@/utils/index";
 const { Account, AccountRole, AccountCountry, Token } = db;
 
 const login = async (req: Request, res: Response): Promise<void> => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   const input = { email: "", username: "", phone: "" };
 
-  switch (isEmailOrPhone(email)) {
+  switch (isEmailOrPhone(username)) {
     case "phone":
-      input["phone"] = email;
+      await validator.validates.Empty(req, "username", "số điện thoại");
+      await validator.validates.Phone(req);
+      input["phone"] = username;
       break;
     case "email":
-      input["email"] = email;
+      await validator.validates.Empty(req, "username", "email");
+      await validator.validates.Email(req);
+      input["email"] = username;
       break;
     default:
-      input["username"] = email;
+      await validator.validates.Empty(req, "username", "username");
+      await validator.validates.Username(req);
+      input["username"] = username;
       break;
   }
-
+  const result = validator.validateErrors(req);
+  if (result?.length) {
+    response.response(res, 422, result);
+    return;
+  }
   try {
     const account = await Account.findOne({
       where: {
@@ -41,33 +49,41 @@ const login = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!account) {
-      res.status(404).json({ message: "User not found" });
-      return;
+      return response.response(res, 404, "user_not_found");
     }
     if (!compareSync(password, account.password)) {
-      res.status(401).json({ message: "Incorrect password" });
-      return;
+      return response.response(res, 401, "incorrect_password");
     }
-    const newAccessToken = generateAccessToken({
-      account_id: account?.id,
-    });
+    let tokenAccess;
     const tokenAccount = await Token.findOne({
       where: {
         account_id: account.id,
       },
     });
-    if (!tokenAccount.accessToken) {
+    tokenAccess = tokenAccount?.accessToken;
+
+    if (!tokenAccess) {
+      const newAccessToken = generate.generateAccessToken({
+        account_id: account?.id,
+      });
       tokenAccount.update({
         accessToken: newAccessToken,
       });
-      res.setHeader("Authorization", `Bearer ${newAccessToken}`);
-      res.status(200).json({ message: "Login success!" });
-      return;
+      tokenAccess = newAccessToken;
     }
-    res.setHeader("Authorization", `Bearer ${tokenAccount.accessToken}`);
-    res.status(200).json({ message: "Login success!" });
+    const newRefreshToken = generate.generateRefreshToken({
+      account_id: account?.id,
+    });
+    res.setHeader("Authorization", `Bearer ${tokenAccess}`);
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: false,
+      path: "/",
+      sameSite: "strict",
+    });
+    response.response(res, 203, "login_success");
   } catch (error) {
-    res.status(500).json();
+    response.response(res, 500, error);
   }
 };
 
@@ -90,27 +106,40 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       account_id: newUser?.id,
     });
 
-    const accessToken = generate.generateAccessToken({ userId: newUser?.id });
+    const accessToken = generate.generateAccessToken({ user_id: newUser?.id });
+    const refreshToken = generate.generateRefreshToken(
+      { user_id: newUser?.id },
+      "3h"
+    );
     await Token.create({
       account_id: newUser.id,
-      accessToken: accessToken,
+      accessToken,
+
       type: "auth",
     });
     res.setHeader("Authorization", `Bearer ${accessToken}`);
-    res.status(200).json({ message: "Signup success!" });
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      path: "/",
+      sameSite: "strict",
+    });
+    response.response(res, 200, "signup_success");
   } catch (error) {
-    res.status(500).json({ message: "Signup fail!" });
+    response.response(
+      res,
+      500,
+      error?.errors.map((item) => {
+        return { message: item?.message };
+      })
+    );
   }
 };
-// LOG OUT
-// LOGOUT: async (req: any, res: any) => {
-//   // Clear cookies when user logs out
-//   // refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
-//   const callback = async (): Promise<any> => {
-//     res.clearCookie("refreshToken");
-//     return { data: "Logged out successfully!", status: 200 };
-//   };
 
-//   return await response(res, callback);
-// };
-export { login, signup };
+const logout = async (req: Request, res: Response): Promise<void> => {
+  res.setHeader("Authorization", "");
+  res.clearCookie("refreshToken");
+  response.response(res, 200, "logout_success");
+};
+
+export { login, signup, logout };

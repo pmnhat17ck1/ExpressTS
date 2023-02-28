@@ -1,34 +1,34 @@
 import jwt from "jsonwebtoken";
 import db from "../models";
 import { checkExpiredToken } from "../utils/common.util";
+import { response } from "../utils/response.util";
 
 const verifyToken = (req: any, res: any, next: any): any => {
   try {
     const token = req.headers.authorization;
     if (token) {
-      const serectKey = process.env.ACCESS_TOKEN_SECRET;
+      const secretKey = process.env.ACCESS_TOKEN_SECRET;
       const accessToken = token.split(" ")[1];
-      jwt.verify(accessToken, serectKey ?? "", async (err: any, item: any) => {
+      jwt.verify(accessToken, secretKey ?? "", async (err: any, item: any) => {
         if (err) {
-          return res.status(403).json("Token is not valid!");
+          return response(res, 422, "token_is_not_valid");
         }
         const account = await db.Account.findOne({
           where: {
             id: item.account_id,
           },
-          raw: true,
         });
         if (!account) {
-          return res.status(500).json("You're not authenticated!");
+          return response(res, 401, "you're_not_authenticated");
         }
         req.account = account;
         next();
       });
     } else {
-      res.status(401).json("You're not authenticated");
+      return response(res, 401, "you're_not_authenticated");
     }
   } catch (error) {
-    console.log("verifyToken-error", error);
+    return response(res, 500);
   }
 };
 

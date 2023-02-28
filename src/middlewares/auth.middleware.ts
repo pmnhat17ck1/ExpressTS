@@ -3,6 +3,7 @@ import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import db from "../models";
 import { generateAccessToken } from "../utils/generate.util";
 import { verifyToken } from "../utils/common.util";
+import { response } from "../utils/response.util";
 
 const { Account, Token } = db;
 export const authenticate = async (
@@ -13,11 +14,11 @@ export const authenticate = async (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      throw new Error("Authorization header not found");
+      return response(res, 500, "authorization_header_not_found");
     }
     const token = authHeader.split(" ")[1];
     if (!token) {
-      throw new Error("Token not found");
+      return response(res, 404, "token_not_found");
     }
     let payload = null;
     let account = {};
@@ -25,7 +26,7 @@ export const authenticate = async (
       payload = verifyToken(token, process.env.ACCESS_TOKEN_SECRET);
       account = await Account.findByPk(payload.account_id);
       if (!account) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return response(res, 401);
       }
       req.account = account;
     } catch (error) {
@@ -37,7 +38,6 @@ export const authenticate = async (
           where: {
             accessToken: token,
           },
-          raw: true,
         });
         await getToken.update({
           accessToken: newAccessToken,
@@ -49,16 +49,15 @@ export const authenticate = async (
           });
         }
       } else {
-        throw new Error("Invalid token");
+        return response(res, 422, "invalid_token");
       }
     }
-    req.account = account;
-    return next();
+    next();
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
-      return res.status(400).json({ message: "Invalid token" });
+      return response(res, 422, "invalid_token");
     }
-    return res.status(500).json({ message: "Server error" });
+    return response(res, 500);
   }
 };
 
