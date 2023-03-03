@@ -5,28 +5,18 @@ import { TaskI } from "@/interfaces/task.interface";
 
 export type TaskreationAttributes = Optional<
   TaskI,
-  | "id"
-  | "title"
-  | "summary"
-  | "description"
-  | "reporter"
-  | "assignee"
-  | "linkIssue"
-  | "dueDate"
+  "id" | "title" | "pin" | "description" | "dueDate"
 >;
 
 export class Task extends Model<TaskI, TaskreationAttributes> implements Task {
   public id!: string;
   public title!: string;
-  public summary!: string;
   public description!: string;
-  public reporter!: string;
-  public assignee!: string;
-  public linkIssue!: string;
   public dueDate!: Date;
+  public pin!: boolean;
 
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  public created_at!: Date;
+  public updated_at!: Date;
 }
 
 export default function (sequelize: Sequelize): typeof Task {
@@ -41,28 +31,27 @@ export default function (sequelize: Sequelize): typeof Task {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      summary: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       description: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      reporter: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      assignee: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      linkIssue: {
-        type: DataTypes.STRING,
-        allowNull: true,
+      pin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       dueDate: {
         type: DataTypes.DATEONLY,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

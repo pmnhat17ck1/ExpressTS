@@ -4,8 +4,8 @@ module.exports = {
       {
         name: 'John Doe',
         email: 'john.doe@example.com',
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ]);
   },

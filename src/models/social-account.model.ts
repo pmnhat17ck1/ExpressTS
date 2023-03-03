@@ -15,11 +15,11 @@ export class SocialAccount
   public id!: string;
   public account_id!: number;
   public provider!: string;
-  public providerAccount_id!: string;
+  public provider_account_id!: string;
   public extraData!: string;
 
   public readonly created_at!: Date;
-  public readonly updatedAt!: Date;
+  public readonly updated_at!: Date;
 }
 
 export default function (sequelize: Sequelize): typeof SocialAccount {

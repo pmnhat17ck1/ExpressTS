@@ -26,8 +26,8 @@ class App {
     this.port = config.PORT || 8000;
 
     this.connectToDatabase();
-    this.syncAssociations();
     this.syncDatabase();
+    this.syncAssociations();
     this.initializeMiddlewares();
     this.initializeRoutes();
     this.initializeErrorHandling();
@@ -60,7 +60,7 @@ class App {
   }
 
   private syncDatabase() {
-    DB.sequelize.sync({ alter: true });
+    DB.sequelize.sync({ force: true });
   }
 
   private initializeMiddlewares() {
