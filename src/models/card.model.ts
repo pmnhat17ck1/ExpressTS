@@ -6,8 +6,8 @@ export class Card extends Model {
   public expirationDate!: Date;
   public cvv!: string;
 
-  public createdAt!: Date;
-  public updatedAt!: Date;
+  public created_at!: Date;
+  public updated_at!: Date;
 }
 export default function (sequelize: Sequelize) {
   Card.init(
@@ -28,6 +28,16 @@ export default function (sequelize: Sequelize) {
       cvv: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
     },
     {

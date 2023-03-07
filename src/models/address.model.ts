@@ -27,8 +27,8 @@ export default function (sequelize: Sequelize) {
       isDefault: DataTypes.BOOLEAN,
     },
     {
-      modelName: "Card",
-      tableName: "cards",
+      modelName: "Address",
+      tableName: "address",
       sequelize,
     }
   );

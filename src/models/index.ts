@@ -5,7 +5,7 @@ import RoleModel from "@/models/role.model";
 import ImageModel from "@/models/image.model";
 import CountryModel from "@/models/country.model";
 import SocialApplicationModel from "@/models/social-application.model";
-import TaskModel from "@/models/task.model";
+import TodoModel from "@/models/todo.model";
 import TokenModel from "@/models/token.model";
 import NotificationModel from "@/models/notification.model";
 import PaymentMethodModel from "@/models/payment-method.model";
@@ -59,7 +59,7 @@ const models = {
   Account: AccountModel(sequelize),
   Role: RoleModel(sequelize),
   SocialApplication: SocialApplicationModel(sequelize),
-  Task: TaskModel(sequelize),
+  Todo: TodoModel(sequelize),
   Country: CountryModel(sequelize),
   Image: ImageModel(sequelize),
   Profile: ProfileModel(sequelize),
@@ -87,7 +87,7 @@ const {
   Account,
   Role,
   SocialApplication,
-  Task,
+  Todo,
   Country,
   Image,
   Profile,
@@ -129,7 +129,7 @@ const associations = () => {
     foreignKey: "account_id",
     onDelete: "CASCADE",
   });
-  Account.hasMany(Task, {
+  Account.hasMany(Todo, {
     foreignKey: "account_id",
     onDelete: "CASCADE",
   });
@@ -150,6 +150,14 @@ const associations = () => {
     onDelete: "CASCADE",
   });
   Account.hasMany(Order, {
+    foreignKey: "account_id",
+    onDelete: "CASCADE",
+  });
+  Account.hasMany(Comment, {
+    foreignKey: "account_id",
+    onDelete: "CASCADE",
+  });
+  Account.hasMany(Rate, {
     foreignKey: "account_id",
     onDelete: "CASCADE",
   });
@@ -182,25 +190,14 @@ const associations = () => {
     foreignKey: "country_id",
   });
   // Image
-  Image.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Image.belongsTo(Account);
   // Profile
-  Profile.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Profile.belongsTo(Account);
   // Token
-  Token.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Token.belongsTo(Account);
   // Wallet
-  Wallet.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Wallet.belongsTo(Account);
+  Wallet.hasMany(Card);
   // PaymentMethod
   PaymentMethod.hasMany(Transaction, {
     foreignKey: "payment_method_id",
@@ -211,19 +208,10 @@ const associations = () => {
     onDelete: "CASCADE",
   });
   // Transaction
-  Transaction.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
-  Transaction.belongsTo(PaymentMethod, {
-    foreignKey: "payment_method_id",
-    onDelete: "CASCADE",
-  });
+  Transaction.belongsTo(Account);
+  Transaction.belongsTo(PaymentMethod);
   // Notification
-  Notification.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Notification.belongsTo(Account);
   // Product
   Product.hasMany(Like, {
     foreignKey: "product_id",
@@ -241,45 +229,22 @@ const associations = () => {
     through: OrderDetail,
     foreignKey: "product_id",
   });
-  Product.belongsToMany(Category, { through: "product_categories" });
+  Product.belongsToMany(Category, { through: "product_category" });
   // Card
-  Card.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
-  Card.belongsTo(PaymentMethod, {
-    foreignKey: "payment_method_id",
-    onDelete: "CASCADE",
-  });
-  Card.belongsTo(Order, {
-    foreignKey: "order_id",
-    onDelete: "CASCADE",
-  });
+  Card.belongsTo(Account);
+  Card.belongsTo(PaymentMethod);
   // Like
-  Like.belongsTo(Product, {
-    foreignKey: "product_id",
-    onDelete: "CASCADE",
-  });
+  Like.belongsTo(Product);
+  Like.belongsTo(Account);
   // Comment
-  Comment.belongsTo(Product, {
-    foreignKey: "product_id",
-    onDelete: "CASCADE",
-  });
+  Comment.belongsTo(Account);
+  Comment.belongsTo(Product);
   // Rate
-  Rate.belongsTo(Product, {
-    foreignKey: "product_id",
-    onDelete: "CASCADE",
-  });
+  Rate.belongsTo(Product);
+  Comment.belongsTo(Account);
   // Address
-  Address.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Address.belongsTo(Account);
   // Order
-  Order.hasOne(Card, {
-    foreignKey: "order_id",
-    onDelete: "CASCADE",
-  });
   Order.hasMany(OrderDetail, {
     foreignKey: "order_id",
     onDelete: "CASCADE",
@@ -288,17 +253,13 @@ const associations = () => {
     through: OrderDetail,
     foreignKey: "order_id",
   });
-  Order.belongsTo(Account, {
-    foreignKey: "account_id",
-    onDelete: "CASCADE",
-  });
+  Order.belongsTo(Account);
   // OrderDetail
-  OrderDetail.belongsTo(Order, {
-    foreignKey: "order_id",
-    onDelete: "CASCADE",
-  });
+  OrderDetail.belongsTo(Order);
   // Category
-  Category.belongsToMany(Product, { through: "product_categories" });
+  Category.belongsToMany(Product, { through: "product_category" });
+  // Todo
+  Todo.belongsTo(Account);
 };
 
 const DB = {

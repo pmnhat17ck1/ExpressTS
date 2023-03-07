@@ -1,0 +1,32 @@
+Sequelize hooks
+(1)
+  beforeBulkCreate(instances, options)
+  beforeBulkDestroy(options)
+  beforeBulkUpdate(options)
+(2)
+  beforeValidate(instance, options)
+
+[... validation happens ...]
+
+(3)
+  afterValidate(instance, options)
+  validationFailed(instance, options, error)
+(4)
+  beforeCreate(instance, options)
+  beforeDestroy(instance, options)
+  beforeUpdate(instance, options)
+  beforeSave(instance, options)
+  beforeUpsert(values, options)
+
+[... creation/update/destruction happens ...]
+
+(5)
+  afterCreate(instance, options)
+  afterDestroy(instance, options)
+  afterUpdate(instance, options)
+  afterSave(instance, options)
+  afterUpsert(created, options)
+(6)
+  afterBulkCreate(instances, options)
+  afterBulkDestroy(options)
+  afterBulkUpdate(options)

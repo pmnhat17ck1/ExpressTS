@@ -1,4 +1,4 @@
-export interface TaskI {
+export interface TodoI {
   id: string;
   title: string;
   description: string;

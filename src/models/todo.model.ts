@@ -1,14 +1,14 @@
 import { Sequelize, DataTypes, Model, Optional } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import { TaskI } from "@/interfaces/task.interface";
+import { TodoI } from "@/interfaces/todo.interface";
 
-export type TaskreationAttributes = Optional<
-  TaskI,
+export type TodoCreationAttributes = Optional<
+  TodoI,
   "id" | "title" | "pin" | "description" | "dueDate"
 >;
 
-export class Task extends Model<TaskI, TaskreationAttributes> implements Task {
+export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
   public id!: string;
   public title!: string;
   public description!: string;
@@ -19,8 +19,8 @@ export class Task extends Model<TaskI, TaskreationAttributes> implements Task {
   public updated_at!: Date;
 }
 
-export default function (sequelize: Sequelize): typeof Task {
-  Task.init(
+export default function (sequelize: Sequelize): typeof Todo {
+  Todo.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -55,11 +55,11 @@ export default function (sequelize: Sequelize): typeof Task {
       },
     },
     {
-      modelName: "Task",
-      tableName: "tasks",
+      modelName: "Todo",
+      tableName: "todos",
       sequelize,
     }
   );
 
-  return Task;
+  return Todo;
 }

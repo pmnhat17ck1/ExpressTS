@@ -1,35 +1,35 @@
 import { Request, Response } from "express";
 import db from "@/models";
 
-const { Task } = db;
+const { Todo } = db;
 
-export const getAllTasks = async (
+export const getAllTodos = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const tasks = await Task.findAll();
-    res.json(tasks);
+    const todos = await Todo.findAll();
+    res.json(todos);
   } catch (error) {
     res.status(500).json();
   }
 };
 
-export const createTask = async (
+export const createTodo = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const { title, description } = req.body;
 
   try {
-    const task = await Task.create({ title, description });
-    res.status(201).json(task);
+    const todos = await Todo.create({ title, description });
+    res.status(201).json(todos);
   } catch (error) {
     res.status(500).json();
   }
 };
 
-export const updateTask = async (
+export const updateTodo = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -37,39 +37,39 @@ export const updateTask = async (
   const { title, description } = req.body;
 
   try {
-    const task = await Task.findByPk(id);
+    const todo = await Todo.findByPk(id);
 
-    if (!task) {
-      res.status(404).json({ message: "task not found" });
+    if (!todo) {
+      res.status(404).json({ message: "Todo not found" });
       return;
     }
 
-    task.title = title || task.title;
-    task.description = description || task.description;
+    todo.title = title || todo.title;
+    todo.description = description || todo.description;
 
-    await task.save();
+    await todo.save();
 
-    res.json(task);
+    res.json(todo);
   } catch (error) {
     res.status(500).json();
   }
 };
 
-export const deleteTask = async (
+export const deleteTodo = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const id = parseInt(req.params.id, 10);
 
   try {
-    const task = await Task.findByPk(id);
+    const todo = await Todo.findByPk(id);
 
-    if (!task) {
-      res.status(404).json({ message: "task not found" });
+    if (!todo) {
+      res.status(404).json({ message: "Todo not found" });
       return;
     }
 
-    await task.destroy();
+    await todo.destroy();
 
     res.status(204).json();
   } catch (error) {
