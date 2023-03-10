@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Node.js app using Express, Sequelize, TypeScript, and PostgreSQL",
   "author": "Nhat",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "depcheck": "npx depcheck",
     "prepare": "husky install",
@@ -113,7 +113,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npx husky-run .huskyrc pre-commit"
+      "pre-commit": "lint-staged"
     }
   }
 }

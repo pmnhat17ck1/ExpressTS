@@ -21,7 +21,7 @@ export class SocialAccount
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
 
-  public static associate = (models: any): any => {};
+  public static associate = () => {};
   public static hook = () => {};
 }
 

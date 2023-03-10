@@ -38,8 +38,9 @@ export const createAddressOfAccount = async (
       account_id: req.account.id,
     });
     response.response(res, 200, { message: 'successfully', address });
-  } catch (error) {}
-  response.response(res, 500);
+  } catch (error) {
+    response.response(res, 500);
+  }
 };
 
 export const updateAddressOfAccount = async (
