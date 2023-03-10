@@ -1,5 +1,14 @@
 {
-  "*.ts": [
-    "yarn lint"
+  "*.ts":  [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "src/**/*.js": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "src/**/*.ts": [
+    "eslint --fix",
+    "prettier --write"
   ]
 }
