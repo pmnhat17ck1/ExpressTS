@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Function extends Model implements Function {
   public id!: number;
@@ -6,10 +6,10 @@ export class Function extends Model implements Function {
   public static associate = (models: any): any => {
     Function.belongsToMany(models.Account, {
       through: models.AccountFunctionPermission,
-      onDelete: "CASCADE",
+      onDelete: 'CASCADE',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Function {
   Function.init(
@@ -23,8 +23,8 @@ module.exports = function (sequelize: Sequelize): typeof Function {
     },
     {
       timestamps: false,
-      modelName: "Function",
-      tableName: "functions",
+      modelName: 'Function',
+      tableName: 'functions',
       sequelize,
     }
   );

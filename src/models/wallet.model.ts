@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Wallet extends Model implements Wallet {
   public id!: number;
@@ -10,7 +10,7 @@ export class Wallet extends Model implements Wallet {
     Wallet.belongsTo(models.Account);
     Wallet.hasMany(models.Card);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Wallet {
@@ -38,8 +38,8 @@ module.exports = function (sequelize: Sequelize): typeof Wallet {
       },
     },
     {
-      modelName: "Wallet",
-      tableName: "wallets",
+      modelName: 'Wallet',
+      tableName: 'wallets',
       sequelize,
     }
   );

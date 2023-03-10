@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Order extends Model implements Order {
   public id!: number;
@@ -10,16 +10,16 @@ export class Order extends Model implements Order {
   public updated_at!: Date;
   public static associate = (models: any): any => {
     Order.hasMany(models.OrderDetail, {
-      foreignKey: "order_id",
-      onDelete: "CASCADE",
+      foreignKey: 'order_id',
+      onDelete: 'CASCADE',
     });
     Order.belongsToMany(models.Product, {
       through: models.OrderDetail,
-      foreignKey: "order_id",
+      foreignKey: 'order_id',
     });
     Order.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Order {
@@ -39,9 +39,9 @@ module.exports = function (sequelize: Sequelize): typeof Order {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("paid", "pending", "failed"),
+        type: DataTypes.ENUM('paid', 'pending', 'failed'),
         allowNull: false,
-        defaultValue: "pending",
+        defaultValue: 'pending',
       },
       created_at: {
         type: DataTypes.DATE,
@@ -55,8 +55,8 @@ module.exports = function (sequelize: Sequelize): typeof Order {
       },
     },
     {
-      modelName: "Order",
-      tableName: "orders",
+      modelName: 'Order',
+      tableName: 'orders',
       sequelize,
     }
   );

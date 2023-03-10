@@ -1,8 +1,8 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-import { RoleI } from "@/interfaces/role.interface";
+import { RoleI } from '@/interfaces/role.interface';
 
-export type RoleCreationAttributes = Optional<RoleI, "id" | "name">;
+export type RoleCreationAttributes = Optional<RoleI, 'id' | 'name'>;
 
 export class Role extends Model<RoleI, RoleCreationAttributes> implements Role {
   public id: number;
@@ -11,10 +11,10 @@ export class Role extends Model<RoleI, RoleCreationAttributes> implements Role {
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Role.hasMany(models.Account, {
-      foreignKey: "role_id",
+      foreignKey: 'role_id',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Role {
@@ -32,8 +32,8 @@ module.exports = function (sequelize: Sequelize): typeof Role {
     },
     {
       timestamps: false,
-      modelName: "Role",
-      tableName: "roles",
+      modelName: 'Role',
+      tableName: 'roles',
       sequelize,
     }
   );

@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 // Khởi tạo transporter
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: 'Gmail',
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,

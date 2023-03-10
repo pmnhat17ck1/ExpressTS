@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import db from "@/models";
-import { response } from "@/utils/index";
-const { Address, Account } = db;
+import db from '@/models';
+import { response } from '@/utils/index';
+const { Address } = db;
 //products/:id/ratings
 
 export const getAllAddressOfAccount = async (
@@ -14,11 +14,12 @@ export const getAllAddressOfAccount = async (
       where: { account_id: req.account.id },
     });
     if (!address) {
-      return response.response(res, 404, "Address not found");
+      return response.response(res, 404, 'Address not found');
     }
-    response.response(res, 200, { message: "successfully", address });
-  } catch (error) {}
-  response.response(res, 500);
+    response.response(res, 200, { message: 'successfully', address });
+  } catch (error) {
+    response.response(res, 500);
+  }
 };
 
 export const createAddressOfAccount = async (
@@ -36,7 +37,7 @@ export const createAddressOfAccount = async (
       isDefault,
       account_id: req.account.id,
     });
-    response.response(res, 200, { message: "successfully", address });
+    response.response(res, 200, { message: 'successfully', address });
   } catch (error) {}
   response.response(res, 500);
 };
@@ -62,9 +63,10 @@ export const updateAddressOfAccount = async (
         },
       }
     );
-    response.response(res, 200, { message: "successfully", address });
-  } catch (error) {}
-  response.response(res, 500);
+    response.response(res, 200, { message: 'successfully', address });
+  } catch (error) {
+    response.response(res, 500);
+  }
 };
 
 export const deleteAddressOfAccount = async (
@@ -75,10 +77,10 @@ export const deleteAddressOfAccount = async (
     const { address_id } = req.body;
     const addressFound = await Address.findByPk(address_id);
     if (!addressFound) {
-      return response.response(res, 404, "Address not found");
+      return response.response(res, 404, 'Address not found');
     }
     await addressFound.destroy();
-    response.response(res, 200, { message: "successfully" });
+    response.response(res, 200, { message: 'successfully' });
   } catch (error) {
     response.response(res, 500);
   }

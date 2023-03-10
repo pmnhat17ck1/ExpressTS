@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import db from "@/models";
-import { response } from "@/utils/index";
+import db from '@/models';
+import { response } from '@/utils/index';
 const { Like, Product } = db;
 //products/:id/likes
 
@@ -12,16 +12,17 @@ export const getAllLikeOfProduct = async (
   try {
     const product = await Product.findByPk(req.params.id);
     if (!product) {
-      return response.response(res, 404, "Product not found");
+      return response.response(res, 404, 'Product not found');
     }
     const likes = await Like.findAll({
       where: {
         product_id: product.id,
       },
     });
-    response.response(res, 200, { message: "successfully", likes });
-  } catch (error) {}
-  response.response(res, 500);
+    response.response(res, 200, { message: 'successfully', likes });
+  } catch (error) {
+    response.response(res, 500);
+  }
 };
 
 export const likeForProduct = async (
@@ -32,7 +33,7 @@ export const likeForProduct = async (
     const { like } = req.body;
     const product = await Product.findByPk(req.params.id);
     if (!product) {
-      return response.response(res, 404, "Product not found");
+      return response.response(res, 404, 'Product not found');
     }
     const likeFound = await Like.fineOne({
       where: {
@@ -44,7 +45,8 @@ export const likeForProduct = async (
     } else {
       await likeFound.update({ type: like, where: { product_id: product.id } });
     }
-    response.response(res, 200, { message: "successfully" });
-  } catch (error) {}
-  response.response(res, 500);
+    response.response(res, 200, { message: 'successfully' });
+  } catch (error) {
+    response.response(res, 500);
+  }
 };

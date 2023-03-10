@@ -1,9 +1,9 @@
-import { Response, NextFunction } from "express";
-import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
-import db from "../models";
-import { generateAccessToken } from "../utils/generate.util";
-import { verifyToken } from "../utils/common.util";
-import { response } from "../utils/response.util";
+import { Response, NextFunction } from 'express';
+import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import db from '../models';
+import { generateAccessToken } from '../utils/generate.util';
+import { verifyToken } from '../utils/common.util';
+import { response } from '../utils/response.util';
 
 const { Account, Token } = db;
 export const authenticate = async (
@@ -14,11 +14,11 @@ export const authenticate = async (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-      return response(res, 500, "authorization_header_not_found");
+      return response(res, 500, 'authorization_header_not_found');
     }
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.split(' ')[1];
     if (!token) {
-      return response(res, 404, "token_not_found");
+      return response(res, 404, 'token_not_found');
     }
     let payload = null;
     let account = {};
@@ -49,13 +49,13 @@ export const authenticate = async (
           });
         }
       } else {
-        return response(res, 422, "invalid_token");
+        return response(res, 422, 'invalid_token');
       }
     }
     next();
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
-      return response(res, 422, "invalid_token");
+      return response(res, 422, 'invalid_token');
     }
     return response(res, 500);
   }

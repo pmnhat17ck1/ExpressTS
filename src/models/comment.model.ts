@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Comment extends Model implements Comment {
   public id!: number;
@@ -10,7 +10,7 @@ export class Comment extends Model implements Comment {
     Comment.belongsTo(models.Account);
     Comment.belongsTo(models.Product);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Comment {
   Comment.init(
@@ -36,8 +36,8 @@ module.exports = function (sequelize: Sequelize): typeof Comment {
       },
     },
     {
-      modelName: "Comment",
-      tableName: "comments",
+      modelName: 'Comment',
+      tableName: 'comments',
       sequelize,
     }
   );

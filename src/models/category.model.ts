@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Category extends Model implements Category {
   public id!: number;
@@ -9,11 +9,11 @@ export class Category extends Model implements Category {
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Category.belongsToMany(models.Product, {
-      through: "product_category",
-      onDelete: "CASCADE",
+      through: 'product_category',
+      onDelete: 'CASCADE',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Category {
   Category.init(
@@ -27,8 +27,8 @@ module.exports = function (sequelize: Sequelize): typeof Category {
       description: DataTypes.STRING,
     },
     {
-      modelName: "Category",
-      tableName: "categories",
+      modelName: 'Category',
+      tableName: 'categories',
       sequelize,
     }
   );

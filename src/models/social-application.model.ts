@@ -1,10 +1,10 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-import { SocialApplicationI } from "@/interfaces/social-application.interface";
+import { SocialApplicationI } from '@/interfaces/social-application.interface';
 
 export type SocialApplicationCreationAttributes = Optional<
   SocialApplicationI,
-  "id" | "name" | "clientId" | "secretKey"
+  'id' | 'name' | 'clientId' | 'secretKey'
 >;
 
 export class SocialApplication
@@ -21,10 +21,10 @@ export class SocialApplication
   public static associate = (models: any): any => {
     SocialApplication.belongsToMany(models.Account, {
       through: models.SocialAccount,
-      foreignKey: "provider_id",
+      foreignKey: 'provider_id',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof SocialApplication {
@@ -49,8 +49,8 @@ module.exports = function (sequelize: Sequelize): typeof SocialApplication {
       },
     },
     {
-      modelName: "SocialApplication",
-      tableName: "social_application",
+      modelName: 'SocialApplication',
+      tableName: 'social_application',
       sequelize,
     }
   );

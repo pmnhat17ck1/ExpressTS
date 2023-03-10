@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class OrderDetail extends Model implements OrderDetail {
   public id!: number;
@@ -10,7 +10,7 @@ export class OrderDetail extends Model implements OrderDetail {
   public static associate = (models: any): any => {
     OrderDetail.belongsTo(models.Order);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof OrderDetail {
   OrderDetail.init(
@@ -24,8 +24,8 @@ module.exports = function (sequelize: Sequelize): typeof OrderDetail {
       price: DataTypes.FLOAT,
     },
     {
-      modelName: "OrderDetail",
-      tableName: "order_detail",
+      modelName: 'OrderDetail',
+      tableName: 'order_detail',
       sequelize,
     }
   );

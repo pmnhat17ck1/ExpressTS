@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Like extends Model implements Like {
   public id!: number;
@@ -10,7 +10,7 @@ export class Like extends Model implements Like {
     Like.belongsTo(models.Product);
     Like.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Like {
   Like.init(
@@ -22,7 +22,7 @@ module.exports = function (sequelize: Sequelize): typeof Like {
       },
       type: {
         type: DataTypes.ENUM,
-        values: ["like", "dislike"],
+        values: ['like', 'dislike'],
         allowNull: false,
       },
       created_at: {
@@ -37,8 +37,8 @@ module.exports = function (sequelize: Sequelize): typeof Like {
       },
     },
     {
-      modelName: "Like",
-      tableName: "likes",
+      modelName: 'Like',
+      tableName: 'likes',
       sequelize,
     }
   );

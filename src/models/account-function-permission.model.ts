@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class AccountFunctionPermission
   extends Model
@@ -10,7 +10,7 @@ export class AccountFunctionPermission
     AccountFunctionPermission.belongsTo(models.Account);
   };
 
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (
   sequelize: Sequelize
@@ -24,8 +24,8 @@ module.exports = function (
       },
     },
     {
-      modelName: "AccountFunctionPermission",
-      tableName: "account_function_permission",
+      modelName: 'AccountFunctionPermission',
+      tableName: 'account_function_permission',
       sequelize,
     }
   );

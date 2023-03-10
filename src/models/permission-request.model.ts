@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class PermissionRequest extends Model implements PermissionRequest {
   public id!: number;
@@ -8,7 +8,7 @@ export class PermissionRequest extends Model implements PermissionRequest {
     PermissionRequest.belongsTo(models.Function);
     PermissionRequest.belongsTo(models.Permission);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof PermissionRequest {
   PermissionRequest.init(
@@ -21,13 +21,13 @@ module.exports = function (sequelize: Sequelize): typeof PermissionRequest {
       message: DataTypes.STRING,
       status: {
         type: DataTypes.ENUM,
-        values: ["accepted", "rejected", "pending"],
-        defaultValue: "pending",
+        values: ['accepted', 'rejected', 'pending'],
+        defaultValue: 'pending',
       },
     },
     {
-      modelName: "PermissionRequest",
-      tableName: "permission_request",
+      modelName: 'PermissionRequest',
+      tableName: 'permission_request',
       sequelize,
     }
   );

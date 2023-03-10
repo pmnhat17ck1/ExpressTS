@@ -1,24 +1,24 @@
-import jwt from "jsonwebtoken";
-import crypto from "crypto";
+import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
-export const generateAccessToken = (object = {}, exp = "30d"): any => {
+export const generateAccessToken = (object = {}, exp = '30d'): any => {
   const accessKey = process.env.ACCESS_TOKEN_SECRET;
   return jwt.sign(
     {
       ...object,
     },
-    accessKey ?? "",
+    accessKey ?? '',
     { expiresIn: exp }
   );
 };
 
-export const generateRefreshToken = (object = {}, exp = "60s"): any => {
+export const generateRefreshToken = (object = {}, exp = '60s'): any => {
   const refreshKey = process.env.REFRESH_TOKEN_SECRET;
   return jwt.sign(
     {
       ...object,
     },
-    refreshKey ?? "",
+    refreshKey ?? '',
     { expiresIn: exp }
   );
 };
@@ -26,7 +26,7 @@ export const generateRefreshToken = (object = {}, exp = "60s"): any => {
 export const randomHexCode = (randombytes: any, type: any) =>
   crypto
     .randomBytes(randombytes || 3)
-    .toString(type || "hex")
+    .toString(type || 'hex')
     .toUpperCase();
 
 export default {

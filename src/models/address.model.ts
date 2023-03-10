@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Address extends Model implements Address {
   public id!: number;
@@ -13,7 +13,7 @@ export class Address extends Model implements Address {
   public static associate = (models: any): any => {
     Address.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = (): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Address {
   Address.init(
@@ -50,8 +50,8 @@ module.exports = function (sequelize: Sequelize): typeof Address {
       },
     },
     {
-      modelName: "Address",
-      tableName: "address",
+      modelName: 'Address',
+      tableName: 'address',
       sequelize,
     }
   );

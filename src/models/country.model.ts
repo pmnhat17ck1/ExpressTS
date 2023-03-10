@@ -1,10 +1,10 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-import { CountryI } from "@/interfaces/country.interface";
+import { CountryI } from '@/interfaces/country.interface';
 
 export type CountryCreationAttributes = Optional<
   CountryI,
-  "id" | "name" | "code"
+  'id' | 'name' | 'code'
 >;
 
 export class Country
@@ -18,10 +18,10 @@ export class Country
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Country.hasMany(models.Account, {
-      foreignKey: "country_id",
+      foreignKey: 'country_id',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Country {
@@ -43,8 +43,8 @@ module.exports = function (sequelize: Sequelize): typeof Country {
     },
     {
       timestamps: false,
-      modelName: "Country",
-      tableName: "countries",
+      modelName: 'Country',
+      tableName: 'countries',
       sequelize,
     }
   );

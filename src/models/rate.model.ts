@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Rate extends Model implements Rate {
   public id!: number;
@@ -7,7 +7,7 @@ export class Rate extends Model implements Rate {
   public static associate = (models: any): any => {
     Rate.belongsTo(models.Product);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Rate {
   Rate.init(
@@ -21,8 +21,8 @@ module.exports = function (sequelize: Sequelize): typeof Rate {
       comment: DataTypes.STRING,
     },
     {
-      modelName: "Rate",
-      tableName: "rates",
+      modelName: 'Rate',
+      tableName: 'rates',
       sequelize,
     }
   );

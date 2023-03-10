@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Product extends Model implements Product {
   public id!: number;
@@ -11,27 +11,27 @@ export class Product extends Model implements Product {
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Product.hasMany(models.Like, {
-      foreignKey: "product_id",
-      onDelete: "CASCADE",
+      foreignKey: 'product_id',
+      onDelete: 'CASCADE',
     });
     Product.hasMany(models.Comment, {
-      foreignKey: "product_id",
-      onDelete: "CASCADE",
+      foreignKey: 'product_id',
+      onDelete: 'CASCADE',
     });
     Product.hasMany(models.Rate, {
-      foreignKey: "product_id",
-      onDelete: "CASCADE",
+      foreignKey: 'product_id',
+      onDelete: 'CASCADE',
     });
     Product.belongsToMany(models.Order, {
       through: models.OrderDetail,
-      onDelete: "CASCADE",
-      foreignKey: "product_id",
+      onDelete: 'CASCADE',
+      foreignKey: 'product_id',
     });
     Product.belongsToMany(models.Category, {
-      through: "product_category",
+      through: 'product_category',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Product {
@@ -60,8 +60,8 @@ module.exports = function (sequelize: Sequelize): typeof Product {
       },
     },
     {
-      modelName: "Product",
-      tableName: "products",
+      modelName: 'Product',
+      tableName: 'products',
       sequelize,
     }
   );

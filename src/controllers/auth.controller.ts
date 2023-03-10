@@ -1,32 +1,32 @@
-import { Request, Response } from "express";
-import { Op } from "sequelize";
-import { compareSync } from "bcrypt";
+import { Request, Response } from 'express';
+import { Op } from 'sequelize';
+import { compareSync } from 'bcrypt';
 
-import db from "@/models";
-import { isEmailOrPhone } from "@/utils/util";
-import { generate, validator, response } from "@/utils/index";
+import db from '@/models';
+import { isEmailOrPhone } from '@/utils/util';
+import { generate, validator, response } from '@/utils/index';
 const { Account, Token } = db;
 
 const login = async (req: Request, res: Response): Promise<void> => {
   const { username, password } = req.body;
 
-  const input = { email: "", username: "", phone: "" };
+  const input = { email: '', username: '', phone: '' };
 
   switch (isEmailOrPhone(username)) {
-    case "phone":
-      await validator.validates.Empty(req, "username", "số điện thoại");
+    case 'phone':
+      await validator.validates.Empty(req, 'username', 'số điện thoại');
       await validator.validates.Phone(req);
-      input["phone"] = username;
+      input['phone'] = username;
       break;
-    case "email":
-      await validator.validates.Empty(req, "username", "email");
+    case 'email':
+      await validator.validates.Empty(req, 'username', 'email');
       await validator.validates.Email(req);
-      input["email"] = username;
+      input['email'] = username;
       break;
     default:
-      await validator.validates.Empty(req, "username", "username");
+      await validator.validates.Empty(req, 'username', 'username');
       await validator.validates.Username(req);
-      input["username"] = username;
+      input['username'] = username;
       break;
   }
   const result = validator.validateErrors(req);
@@ -44,15 +44,15 @@ const login = async (req: Request, res: Response): Promise<void> => {
         ],
       },
       attributes: {
-        exclude: ["created_at", "updated_at"],
+        exclude: ['created_at', 'updated_at'],
       },
     });
 
     if (!account) {
-      return response.response(res, 404, "user_not_found");
+      return response.response(res, 404, 'user_not_found');
     }
     if (!compareSync(password, account.password)) {
-      return response.response(res, 401, "incorrect_password");
+      return response.response(res, 401, 'incorrect_password');
     }
     let tokenAccess;
     const tokenAccount = await Token.findOne({
@@ -75,14 +75,14 @@ const login = async (req: Request, res: Response): Promise<void> => {
       account_id: account?.id,
     });
 
-    res.setHeader("Authorization", `Bearer ${tokenAccess}`);
-    res.cookie("refreshToken", newRefreshToken, {
+    res.setHeader('Authorization', `Bearer ${tokenAccess}`);
+    res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
       secure: false,
-      path: "/",
-      sameSite: "strict",
+      path: '/',
+      sameSite: 'strict',
     });
-    response.response(res, 203, "login_success");
+    response.response(res, 203, 'login_success');
   } catch (error) {
     response.response(res, 500, error);
   }
@@ -97,29 +97,29 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       password,
-      role_id: "1",
-      country_id: "1",
+      role_id: '1',
+      country_id: '1',
     });
 
     const accessToken = generate.generateAccessToken({ user_id: newUser?.id });
     const refreshToken = generate.generateRefreshToken(
       { user_id: newUser?.id },
-      "3h"
+      '3h'
     );
     await Token.create({
       account_id: newUser.id,
       accessToken,
       refreshToken,
-      type: "auth",
+      type: 'auth',
     });
-    res.setHeader("Authorization", `Bearer ${accessToken}`);
-    res.cookie("refreshToken", refreshToken, {
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: false,
-      path: "/",
-      sameSite: "strict",
+      path: '/',
+      sameSite: 'strict',
     });
-    response.response(res, 200, "signup_success");
+    response.response(res, 200, 'signup_success');
   } catch (error) {
     response.response(
       res,
@@ -132,9 +132,9 @@ const signup = async (req: Request, res: Response): Promise<void> => {
 };
 
 const logout = async (req: Request, res: Response): Promise<void> => {
-  res.setHeader("Authorization", "");
-  res.clearCookie("refreshToken");
-  response.response(res, 200, "logout_success");
+  res.setHeader('Authorization', '');
+  res.clearCookie('refreshToken');
+  response.response(res, 200, 'logout_success');
 };
 
 export { login, signup, logout };

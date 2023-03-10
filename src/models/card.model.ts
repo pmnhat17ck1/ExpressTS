@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Card extends Model implements Card {
   public id!: number;
@@ -12,7 +12,7 @@ export class Card extends Model implements Card {
     Card.belongsTo(models.Account);
     Card.belongsTo(models.PaymentMethod);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Card {
   Card.init(
@@ -46,8 +46,8 @@ module.exports = function (sequelize: Sequelize): typeof Card {
       },
     },
     {
-      modelName: "Card",
-      tableName: "cards",
+      modelName: 'Card',
+      tableName: 'cards',
       sequelize,
     }
   );

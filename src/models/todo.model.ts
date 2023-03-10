@@ -1,11 +1,11 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
-import { TodoI } from "@/interfaces/todo.interface";
+import { TodoI } from '@/interfaces/todo.interface';
 
 export type TodoCreationAttributes = Optional<
   TodoI,
-  "id" | "title" | "pin" | "description" | "dueDate"
+  'id' | 'title' | 'pin' | 'description' | 'dueDate'
 >;
 
 export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
@@ -20,7 +20,7 @@ export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
   public static associate = (models: any): any => {
     Todo.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Todo {
@@ -59,8 +59,8 @@ module.exports = function (sequelize: Sequelize): typeof Todo {
       },
     },
     {
-      modelName: "Todo",
-      tableName: "todos",
+      modelName: 'Todo',
+      tableName: 'todos',
       sequelize,
     }
   );

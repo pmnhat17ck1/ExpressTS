@@ -1,11 +1,11 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
-import { SocialAccountI } from "@/interfaces/social-account.interface";
+import { SocialAccountI } from '@/interfaces/social-account.interface';
 
 export type SocialAccountCreationAttributes = Optional<
   SocialAccountI,
-  "id" | "provider_account_id" | "extraData"
+  'id' | 'provider_account_id' | 'extraData'
 >;
 
 export class SocialAccount
@@ -22,7 +22,7 @@ export class SocialAccount
   public readonly updated_at!: Date;
 
   public static associate = (models: any): any => {};
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof SocialAccount {
@@ -37,16 +37,16 @@ module.exports = function (sequelize: Sequelize): typeof SocialAccount {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "accounts",
-          key: "id",
+          model: 'accounts',
+          key: 'id',
         },
       },
       provider_id: {
         type: DataTypes.STRING,
         allowNull: false,
         references: {
-          model: "SocialApplication",
-          key: "id",
+          model: 'SocialApplication',
+          key: 'id',
         },
       },
       provider_account_id: {
@@ -59,8 +59,8 @@ module.exports = function (sequelize: Sequelize): typeof SocialAccount {
       },
     },
     {
-      modelName: "SocialAccount",
-      tableName: "social_account",
+      modelName: 'SocialAccount',
+      tableName: 'social_account',
       sequelize,
     }
   );

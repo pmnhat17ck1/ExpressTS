@@ -1,17 +1,17 @@
-import express, { NextFunction, Request, Response } from "express";
-import cookieParser from "cookie-parser";
-import morgan from "morgan";
-import cors from "cors";
-import hpp from "hpp";
-import helmet from "helmet";
-import compression from "compression";
+import express, { NextFunction, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import cors from 'cors';
+import hpp from 'hpp';
+import helmet from 'helmet';
+import compression from 'compression';
 
-import DB from "@models/index";
-import config from "@config";
-import { logger, stream } from "@utils/logger";
-import errorHandler from "@middlewares/error.middleware";
-import { getRoutes } from "@routes/index";
-import { getAppVersion } from "@utils/common.util";
+import DB from '@models/index';
+import config from '@config';
+import { logger, stream } from '@utils/logger';
+import errorHandler from '@middlewares/error.middleware';
+import { getRoutes } from '@routes/index';
+import { getAppVersion } from '@utils/common.util';
 
 class App {
   public app: express.Application;
@@ -21,8 +21,8 @@ class App {
 
   constructor() {
     this.app = express();
-    this.env = config.NODE_ENV || "development";
-    this.version = config.APP_VERSION || "default";
+    this.env = config.NODE_ENV || 'development';
+    this.version = config.APP_VERSION || 'default';
     this.port = config.PORT || 8000;
 
     this.connectToDatabase();
@@ -50,7 +50,7 @@ class App {
     DB.sequelize
       .authenticate()
       .then(() => {
-        console.log("Database connected...");
+        console.log('Database connected...');
       })
       .catch((err: any) => console.log(`Connect database error: ${err}`));
   }
@@ -68,7 +68,7 @@ class App {
     this.app.use(
       cors({
         origin: config.ORIGIN,
-        credentials: config.CREDENTIALS === "true",
+        credentials: config.CREDENTIALS === 'true',
       })
     );
     this.app.use(hpp());
@@ -78,7 +78,7 @@ class App {
         level: 6,
         threshold: 100 * 1000,
         filter: (req: any, res: any) => {
-          if (req.headers["x-no-compress"]) {
+          if (req.headers['x-no-compress']) {
             return false;
           }
           return compression.filter(req, res);
@@ -88,19 +88,19 @@ class App {
     this.app.use(express.json());
     this.app.use(
       express.urlencoded({
-        limit: "5mb",
+        limit: '5mb',
         extended: false,
         parameterLimit: 10000,
       })
     );
     this.app.use(cookieParser());
-    this.app.use(express.static("public"));
-    this.app.use("*/css", express.static("public/css"));
+    this.app.use(express.static('public'));
+    this.app.use('*/css', express.static('public/css'));
   }
 
   private initializeRoutes() {
-    this.app.get("/*", (req: Request, res: Response, next: NextFunction) => {
-      res.setHeader("Last-Modified", new Date().toUTCString());
+    this.app.get('/*', (req: Request, res: Response, next: NextFunction) => {
+      res.setHeader('Last-Modified', new Date().toUTCString());
       next();
     });
     this.app.use(`/api/${getAppVersion(this.version)}`, getRoutes());

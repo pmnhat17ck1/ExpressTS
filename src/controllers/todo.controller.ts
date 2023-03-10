@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import db from "@/models";
-import { response } from "@/utils/response.util";
+import { Request, Response } from 'express';
+import db from '@/models';
+import { response } from '@/utils/response.util';
 
 const { Todo } = db;
 
@@ -74,7 +74,7 @@ export const updateTodo = async (
     const todo = await Todo.findByPk(id);
 
     if (!todo) {
-      res.status(404).json({ message: "Todo not found" });
+      res.status(404).json({ message: 'Todo not found' });
       return;
     }
 
@@ -99,7 +99,7 @@ export const deleteTodo = async (
     const todo = await Todo.findByPk(id);
 
     if (!todo) {
-      res.status(404).json({ message: "Todo not found" });
+      res.status(404).json({ message: 'Todo not found' });
       return;
     }
 

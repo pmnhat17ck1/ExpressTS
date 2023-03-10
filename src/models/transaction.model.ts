@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Transaction extends Model implements Transaction {
   public id!: number;
@@ -12,7 +12,7 @@ export class Transaction extends Model implements Transaction {
     Transaction.belongsTo(models.Account);
     Transaction.belongsTo(models.PaymentMethod);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Transaction {
@@ -32,9 +32,9 @@ module.exports = function (sequelize: Sequelize): typeof Transaction {
         allowNull: true,
       },
       status: {
-        type: DataTypes.ENUM("paid", "pending", "failed"),
+        type: DataTypes.ENUM('paid', 'pending', 'failed'),
         allowNull: false,
-        defaultValue: "pending",
+        defaultValue: 'pending',
       },
       created_at: {
         type: DataTypes.DATE,
@@ -48,8 +48,8 @@ module.exports = function (sequelize: Sequelize): typeof Transaction {
       },
     },
     {
-      modelName: "Transaction",
-      tableName: "transactions",
+      modelName: 'Transaction',
+      tableName: 'transactions',
       sequelize,
     }
   );

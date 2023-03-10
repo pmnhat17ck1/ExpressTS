@@ -1,10 +1,10 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
-import { hashSync } from "bcrypt";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
+import { hashSync } from 'bcrypt';
 
-import { AccountI } from "@/interfaces/account.interface";
+import { AccountI } from '@/interfaces/account.interface';
 
-export type AccountCreationAttributes = Optional<AccountI, "id">;
+export type AccountCreationAttributes = Optional<AccountI, 'id'>;
 
 export class Account
   extends Model<AccountI, AccountCreationAttributes>
@@ -21,70 +21,70 @@ export class Account
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Account.hasOne(models.Profile, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasOne(models.Wallet, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasOne(models.Token, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
 
     Account.hasMany(models.Image, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Todo, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Notification, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Card, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Address, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Order, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Comment, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.Rate, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.hasMany(models.PermissionRequest, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     Account.belongsTo(models.Country, {
       foreignKey: {
@@ -94,17 +94,17 @@ export class Account
     Account.belongsTo(models.Role);
     Account.belongsToMany(models.SocialApplication, {
       through: models.SocialAccount,
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
     });
     Account.hasMany(models.AccountFunctionPermission, {
-      foreignKey: "account_id",
-      onDelete: "CASCADE",
-      onUpdate: "CASCADE",
+      foreignKey: 'account_id',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
   };
   public static hook = (models: any): any => {
-    Account.afterCreate((user, options) => {
+    Account.afterCreate((user) => {
       models.Wallet.create({
         account_id: user.id,
       });
@@ -145,13 +145,13 @@ module.exports = function (sequelize: Sequelize): typeof Account {
         type: DataTypes.STRING(255),
         set(value: string) {
           const salt = 10;
-          this.setDataValue("password", hashSync(value, salt));
+          this.setDataValue('password', hashSync(value, salt));
         },
       },
     },
     {
-      modelName: "Account",
-      tableName: "accounts",
+      modelName: 'Account',
+      tableName: 'accounts',
       sequelize,
     }
   );

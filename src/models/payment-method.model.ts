@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class PaymentMethod extends Model implements PaymentMethod {
   public id!: number;
@@ -10,13 +10,13 @@ export class PaymentMethod extends Model implements PaymentMethod {
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     PaymentMethod.hasMany(models.Transaction, {
-      foreignKey: "payment_method_id",
+      foreignKey: 'payment_method_id',
     });
     PaymentMethod.hasMany(models.Card, {
-      foreignKey: "payment_method_id",
+      foreignKey: 'payment_method_id',
     });
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof PaymentMethod {
@@ -42,8 +42,8 @@ module.exports = function (sequelize: Sequelize): typeof PaymentMethod {
     },
     {
       timestamps: false,
-      modelName: "PaymentMethod",
-      tableName: "payment_method",
+      modelName: 'PaymentMethod',
+      tableName: 'payment_method',
       sequelize,
     }
   );

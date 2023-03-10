@@ -1,11 +1,11 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
-import { ImageI } from "@/interfaces/image.interface";
+import { ImageI } from '@/interfaces/image.interface';
 
 export type ImageCreationAttributes = Optional<
   ImageI,
-  "id" | "url" | "created_at" | "updated_at"
+  'id' | 'url' | 'created_at' | 'updated_at'
 >;
 
 export class Image
@@ -19,7 +19,7 @@ export class Image
   public static associate = (models: any): any => {
     Image.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Image {
@@ -46,8 +46,8 @@ module.exports = function (sequelize: Sequelize): typeof Image {
       },
     },
     {
-      modelName: "Image",
-      tableName: "images",
+      modelName: 'Image',
+      tableName: 'images',
       sequelize,
     }
   );

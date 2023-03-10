@@ -1,4 +1,4 @@
-import { Sequelize, DataTypes, Model } from "sequelize";
+import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Notification extends Model implements Notification {
   public id!: number;
@@ -10,7 +10,7 @@ export class Notification extends Model implements Notification {
   public static associate = (models: any): any => {
     Notification.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Notification {
@@ -42,8 +42,8 @@ module.exports = function (sequelize: Sequelize): typeof Notification {
       },
     },
     {
-      modelName: "Notification",
-      tableName: "notifications",
+      modelName: 'Notification',
+      tableName: 'notifications',
       sequelize,
     }
   );

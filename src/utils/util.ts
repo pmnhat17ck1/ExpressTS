@@ -1,13 +1,13 @@
 export const isEmpty = (value: string | number | object): boolean => {
   if (value === null) {
     return true;
-  } else if (typeof value !== "number" && value === "") {
+  } else if (typeof value !== 'number' && value === '') {
     return true;
-  } else if (typeof value === "undefined" || value === undefined) {
+  } else if (typeof value === 'undefined' || value === undefined) {
     return true;
   } else if (
     value !== null &&
-    typeof value === "object" &&
+    typeof value === 'object' &&
     !Object.keys(value).length
   ) {
     return true;
@@ -18,17 +18,17 @@ export const isEmpty = (value: string | number | object): boolean => {
 export const isEmailOrPhone = (input) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (emailRegex.test(input)) {
-    return "email";
+    return 'email';
   }
   const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
   if (phoneRegex.test(input)) {
-    return "phone";
+    return 'phone';
   }
-  return "username";
+  return 'username';
 };
 
 export const isString = (data) =>
-  typeof data === "string" || data instanceof String;
+  typeof data === 'string' || data instanceof String;
 
 export const isArray = (data) => Array.isArray(data);
 

@@ -1,11 +1,11 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
+import { v4 as uuidv4 } from 'uuid';
 
-import { ProfileI } from "@/interfaces/profile.interface";
+import { ProfileI } from '@/interfaces/profile.interface';
 
 export type ProfileCreationAttributes = Optional<
   ProfileI,
-  "id" | "fullName" | "dateOfBirth" | "avatar"
+  'id' | 'fullName' | 'dateOfBirth' | 'avatar'
 >;
 
 export class Profile
@@ -22,7 +22,7 @@ export class Profile
   public static associate = (models: any): any => {
     Profile.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Profile {
@@ -47,8 +47,8 @@ module.exports = function (sequelize: Sequelize): typeof Profile {
       },
     },
     {
-      modelName: "Profile",
-      tableName: "profiles",
+      modelName: 'Profile',
+      tableName: 'profiles',
       sequelize,
     }
   );

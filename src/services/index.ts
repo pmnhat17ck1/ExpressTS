@@ -1,3 +1,3 @@
-const a = "";
+const a = '';
 
 export default { a };

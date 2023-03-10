@@ -1,17 +1,17 @@
-import jwt from "jsonwebtoken";
-import db from "../models";
-import { checkExpiredToken } from "../utils/common.util";
-import { response } from "../utils/response.util";
+import jwt from 'jsonwebtoken';
+import db from '../models';
+import { checkExpiredToken } from '../utils/common.util';
+import { response } from '../utils/response.util';
 
 const verifyToken = (req: any, res: any, next: any): any => {
   try {
     const token = req.headers.authorization;
     if (token) {
       const secretKey = process.env.ACCESS_TOKEN_SECRET;
-      const accessToken = token.split(" ")[1];
-      jwt.verify(accessToken, secretKey ?? "", async (err: any, item: any) => {
+      const accessToken = token.split(' ')[1];
+      jwt.verify(accessToken, secretKey ?? '', async (err: any, item: any) => {
         if (err) {
-          return response(res, 422, "token_is_not_valid");
+          return response(res, 422, 'token_is_not_valid');
         }
         const account = await db.Account.findOne({
           where: {
@@ -35,17 +35,17 @@ const verifyToken = (req: any, res: any, next: any): any => {
 const verifyTokenRefresh = (req: any, res: any, next: any): any => {
   // ACCESS TOKEN FROM HEADER, REFRESH TOKEN FROM COOKIE
   try {
-    const codeRefresh = req.cookies.refreshToken || "";
+    const codeRefresh = req.cookies.refreshToken || '';
     const serectKey = process.env.JWT_REFRESH_KEY;
-    const refreshToken = codeRefresh || codeRefresh.split(" ")[1];
+    const refreshToken = codeRefresh || codeRefresh.split(' ')[1];
     if (codeRefresh) {
-      jwt.verify(refreshToken, serectKey ?? "", async (err: any, item: any) => {
+      jwt.verify(refreshToken, serectKey ?? '', async (err: any, item: any) => {
         if (err) {
-          return res.status(403).json("Refresh token is not valid!");
+          return res.status(403).json('Refresh token is not valid!');
         }
         const refreshExpired = checkExpiredToken(item?.exp);
         if (refreshExpired) {
-          return res.status(500).json("Refresh token was expired!");
+          return res.status(500).json('Refresh token was expired!');
         }
         req.account_id = item.account_id;
         next();
@@ -54,7 +54,7 @@ const verifyTokenRefresh = (req: any, res: any, next: any): any => {
       res.status(401).json("You're not authenticated");
     }
   } catch (error) {
-    console.log("verifyTokenRefresh-error", error);
+    console.log('verifyTokenRefresh-error', error);
   }
 };
 

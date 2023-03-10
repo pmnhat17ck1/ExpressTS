@@ -1,10 +1,10 @@
-import { Sequelize, DataTypes, Model, Optional } from "sequelize";
+import { Sequelize, DataTypes, Model, Optional } from 'sequelize';
 
-import { TokenI } from "@/interfaces/token.interface";
+import { TokenI } from '@/interfaces/token.interface';
 
 export type TokenCreationAttributes = Optional<
   TokenI,
-  "id" | "account_id" | "accessToken" | "refreshToken" | "type"
+  'id' | 'account_id' | 'accessToken' | 'refreshToken' | 'type'
 >;
 
 export class Token
@@ -22,7 +22,7 @@ export class Token
   public static associate = (models: any): any => {
     Token.belongsTo(models.Account);
   };
-  public static hook = (models: any): any => {};
+  public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Token {
@@ -37,8 +37,8 @@ module.exports = function (sequelize: Sequelize): typeof Token {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: "accounts",
-          key: "id",
+          model: 'accounts',
+          key: 'id',
         },
       },
       accessToken: {
@@ -53,8 +53,8 @@ module.exports = function (sequelize: Sequelize): typeof Token {
     },
     {
       timestamps: false,
-      modelName: "Token",
-      tableName: "tokens",
+      modelName: 'Token',
+      tableName: 'tokens',
       sequelize,
     }
   );
