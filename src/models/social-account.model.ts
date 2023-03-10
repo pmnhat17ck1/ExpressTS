@@ -20,9 +20,11 @@ export class SocialAccount
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public static associate = (models: any): any => {};
 }
 
-export default function (sequelize: Sequelize): typeof SocialAccount {
+module.exports = function (sequelize: Sequelize): typeof SocialAccount {
   SocialAccount.init(
     {
       id: {
@@ -63,4 +65,4 @@ export default function (sequelize: Sequelize): typeof SocialAccount {
   );
 
   return SocialAccount;
-}
+};

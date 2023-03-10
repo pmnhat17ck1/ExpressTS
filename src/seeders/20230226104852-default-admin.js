@@ -14,22 +14,8 @@ module.exports = {
         phone: "0386487072",
         email: "admin123@gmail.com",
         is_active: true,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    ]);
-    await queryInterface.bulkInsert("account_country", [
-      {
         country_id: "1",
-        account_id: idAdmin,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    ]);
-    await queryInterface.bulkInsert("account_role", [
-      {
         role_id: "1",
-        account_id: idAdmin,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -42,7 +28,7 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete("countries", null, {});
-    await queryInterface.bulkDelete("account_country", null, {});
+    await queryInterface.bulkDelete("accounts", null, {});
+    await queryInterface.bulkDelete("tokens", null, {});
   },
 };

@@ -5,7 +5,7 @@ import { ProfileI } from "@/interfaces/profile.interface";
 
 export type ProfileCreationAttributes = Optional<
   ProfileI,
-  "id" | "fullName" | "dateOfBirth" | "address" | "avatarUrl"
+  "id" | "fullName" | "dateOfBirth" | "avatar"
 >;
 
 export class Profile
@@ -15,14 +15,17 @@ export class Profile
   public id!: string;
   public fullName!: string;
   public dateOfBirth!: Date;
-  public address!: string;
-  public avatarUrl!: string;
+  public avatar!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Profile.belongsTo(models.Account);
+    Profile.belongsTo(models.Address);
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Profile {
+module.exports = function (sequelize: Sequelize): typeof Profile {
   Profile.init(
     {
       id: {
@@ -38,11 +41,7 @@ export default function (sequelize: Sequelize): typeof Profile {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      address: {
-        type: DataTypes.STRING(255),
-        allowNull: true,
-      },
-      avatarUrl: {
+      avatar: {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
@@ -55,4 +54,4 @@ export default function (sequelize: Sequelize): typeof Profile {
   );
 
   return Profile;
-}
+};

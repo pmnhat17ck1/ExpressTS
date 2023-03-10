@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Transaction extends Model {
+export class Transaction extends Model implements Transaction {
   public id!: number;
   public amount!: string;
   public description!: string;
@@ -8,9 +8,13 @@ export class Transaction extends Model {
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Transaction.belongsTo(models.Account);
+    Transaction.belongsTo(models.PaymentMethod);
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Transaction {
   Transaction.init(
     {
       id: {
@@ -50,4 +54,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return Transaction;
-}
+};

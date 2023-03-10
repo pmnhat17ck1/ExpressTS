@@ -1,14 +1,18 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Wallet extends Model {
+export class Wallet extends Model implements Wallet {
   public id!: number;
   public balance!: string;
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Wallet.belongsTo(models.Account);
+    Wallet.hasMany(models.Card);
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Wallet {
   Wallet.init(
     {
       id: {
@@ -40,4 +44,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return Wallet;
-}
+};

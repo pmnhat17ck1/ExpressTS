@@ -1,13 +1,17 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Like extends Model {
+export class Like extends Model implements Like {
   public id!: number;
   public type!: string;
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Like.belongsTo(models.Product);
+    Like.belongsTo(models.Account);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Like {
   Like.init(
     {
       id: {
@@ -38,4 +42,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Like;
-}
+};

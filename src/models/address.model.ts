@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Address extends Model {
+export class Address extends Model implements Address {
   public id!: number;
   public street!: string;
   public city!: string;
@@ -10,8 +10,12 @@ export class Address extends Model {
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Address.belongsTo(models.Account);
+    Address.hasOne(models.Profile);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Address {
   Address.init(
     {
       id: {
@@ -33,4 +37,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Address;
-}
+};

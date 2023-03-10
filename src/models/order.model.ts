@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Order extends Model {
+export class Order extends Model implements Order {
   public id!: number;
   public totalPrice!: string;
   public description!: string;
@@ -8,9 +8,20 @@ export class Order extends Model {
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Order.hasMany(models.OrderDetail, {
+      foreignKey: "order_id",
+      onDelete: "CASCADE",
+    });
+    Order.belongsToMany(models.Product, {
+      through: models.OrderDetail,
+      foreignKey: "order_id",
+    });
+    Order.belongsTo(models.Account);
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Order {
   Order.init(
     {
       id: {
@@ -50,4 +61,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return Order;
-}
+};

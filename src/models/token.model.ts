@@ -19,9 +19,12 @@ export class Token
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Token.belongsTo(models.Account);
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Token {
+module.exports = function (sequelize: Sequelize): typeof Token {
   Token.init(
     {
       id: {
@@ -56,4 +59,4 @@ export default function (sequelize: Sequelize): typeof Token {
   );
 
   return Token;
-}
+};

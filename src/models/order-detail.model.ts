@@ -1,14 +1,17 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class OrderDetail extends Model {
+export class OrderDetail extends Model implements OrderDetail {
   public id!: number;
   public quantity!: string;
   public price!: number;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    OrderDetail.belongsTo(models.Order);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof OrderDetail {
   OrderDetail.init(
     {
       id: {
@@ -26,4 +29,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return OrderDetail;
-}
+};

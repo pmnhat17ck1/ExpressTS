@@ -1,14 +1,17 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Category extends Model {
+export class Category extends Model implements Category {
   public id!: number;
   public name!: string;
   public description!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Category.belongsToMany(models.Product, { through: "product_category" });
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Category {
   Category.init(
     {
       id: {
@@ -26,4 +29,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Category;
-}
+};

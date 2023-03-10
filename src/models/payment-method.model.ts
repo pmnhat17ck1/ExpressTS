@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class PaymentMethod extends Model {
+export class PaymentMethod extends Model implements PaymentMethod {
   public id!: number;
   public name!: string;
   public code!: string;
@@ -8,9 +8,19 @@ export class PaymentMethod extends Model {
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    PaymentMethod.hasMany(models.Transaction, {
+      foreignKey: "payment_method_id",
+      onDelete: "CASCADE",
+    });
+    PaymentMethod.hasMany(models.Card, {
+      foreignKey: "payment_method_id",
+      onDelete: "CASCADE",
+    });
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof PaymentMethod {
   PaymentMethod.init(
     {
       id: {
@@ -39,4 +49,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return PaymentMethod;
-}
+};

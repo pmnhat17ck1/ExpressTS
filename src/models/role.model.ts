@@ -9,9 +9,14 @@ export class Role extends Model<RoleI, RoleCreationAttributes> implements Role {
   public name: string;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Role.hasMany(models.Account, {
+      foreignKey: "role_id",
+    });
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Role {
+module.exports = function (sequelize: Sequelize): typeof Role {
   Role.init(
     {
       id: {
@@ -33,4 +38,4 @@ export default function (sequelize: Sequelize): typeof Role {
   );
 
   return Role;
-}
+};

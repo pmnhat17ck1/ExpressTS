@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Card extends Model {
+export class Card extends Model implements Card {
   public id!: number;
   public cardNumber!: string;
   public expirationDate!: Date;
@@ -8,8 +8,12 @@ export class Card extends Model {
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Card.belongsTo(models.Account);
+    Card.belongsTo(models.PaymentMethod);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Card {
   Card.init(
     {
       id: {
@@ -47,4 +51,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Card;
-}
+};

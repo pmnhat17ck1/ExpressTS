@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Product extends Model {
+export class Product extends Model implements Product {
   public id!: number;
   public name!: string;
   public description!: string;
@@ -9,9 +9,28 @@ export class Product extends Model {
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Product.hasMany(models.Like, {
+      foreignKey: "product_id",
+      onDelete: "CASCADE",
+    });
+    Product.hasMany(models.Comment, {
+      foreignKey: "product_id",
+      onDelete: "CASCADE",
+    });
+    Product.hasMany(models.Rate, {
+      foreignKey: "product_id",
+      onDelete: "CASCADE",
+    });
+    Product.belongsToMany(models.Order, {
+      through: models.OrderDetail,
+      foreignKey: "product_id",
+    });
+    Product.belongsToMany(models.Category, { through: "product_category" });
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Product {
   Product.init(
     {
       id: {
@@ -44,4 +63,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return Product;
-}
+};

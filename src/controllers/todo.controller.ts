@@ -1,17 +1,51 @@
 import { Request, Response } from "express";
 import db from "@/models";
+import { response } from "@/utils/response.util";
 
 const { Todo } = db;
 
-export const getAllTodos = async (
+export const getAllTodos = async (req: any, res: Response): Promise<void> => {
+  try {
+    const todos = await Todo.findAll();
+    response(res, 200, todos);
+  } catch (error) {
+    response(res, 500);
+  }
+};
+
+export const deleteAllTodoByAccountId = async (
+  req: any,
+  res: Response
+): Promise<void> => {
+  try {
+    await Todo.destroy({ where: { account_id: req.account.id } });
+    response(res, 200);
+  } catch (error) {
+    response(res, 500);
+  }
+};
+
+export const getAllTodoByAccountId = async (
+  req: any,
+  res: Response
+): Promise<void> => {
+  try {
+    const todos = await Todo.findAll({ where: { account_id: req.account.id } });
+    response(res, 200, todos);
+  } catch (error) {
+    response(res, 500);
+  }
+};
+
+export const deleteByIds = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const todos = await Todo.findAll();
-    res.json(todos);
+    await Todo.destroy({ where: {} });
+    response(res, 200);
   } catch (error) {
-    res.status(500).json();
+    response(res, 500);
   }
 };
 

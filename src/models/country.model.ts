@@ -16,9 +16,14 @@ export class Country
   public code!: string;
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Country.hasMany(models.Account, {
+      foreignKey: "country_id",
+    });
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Country {
+module.exports = function (sequelize: Sequelize): typeof Country {
   Country.init(
     {
       id: {
@@ -44,4 +49,4 @@ export default function (sequelize: Sequelize): typeof Country {
   );
 
   return Country;
-}
+};

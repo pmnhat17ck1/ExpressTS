@@ -1,13 +1,17 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Comment extends Model {
+export class Comment extends Model implements Comment {
   public id!: number;
   public content!: string;
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Comment.belongsTo(models.Account);
+    Comment.belongsTo(models.Product);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Comment {
   Comment.init(
     {
       id: {
@@ -37,4 +41,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Comment;
-}
+};

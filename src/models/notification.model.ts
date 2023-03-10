@@ -1,15 +1,18 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Notification extends Model {
+export class Notification extends Model implements Notification {
   public id!: number;
   public content!: string;
   public isRead!: string;
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Notification.belongsTo(models.Account);
+  };
 }
 
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Notification {
   Notification.init(
     {
       id: {
@@ -45,4 +48,4 @@ export default function (sequelize: Sequelize) {
   );
 
   return Notification;
-}
+};

@@ -16,9 +16,12 @@ export class Image
   public url!: string;
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Image.belongsTo(models.Account);
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Image {
+module.exports = function (sequelize: Sequelize): typeof Image {
   Image.init(
     {
       id: {
@@ -49,4 +52,4 @@ export default function (sequelize: Sequelize): typeof Image {
   );
 
   return Image;
-}
+};

@@ -17,9 +17,12 @@ export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
 
   public created_at!: Date;
   public updated_at!: Date;
+  public static associate = (models: any): any => {
+    Todo.belongsTo(models.Account);
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Todo {
+module.exports = function (sequelize: Sequelize): typeof Todo {
   Todo.init(
     {
       id: {
@@ -62,4 +65,4 @@ export default function (sequelize: Sequelize): typeof Todo {
   );
 
   return Todo;
-}
+};

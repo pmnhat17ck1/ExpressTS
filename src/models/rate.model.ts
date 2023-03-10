@@ -1,11 +1,14 @@
 import { Sequelize, DataTypes, Model } from "sequelize";
 
-export class Rate extends Model {
+export class Rate extends Model implements Rate {
   public id!: number;
   public value!: string;
   public comment!: number;
+  public static associate = (models: any): any => {
+    Rate.belongsTo(models.Product);
+  };
 }
-export default function (sequelize: Sequelize) {
+module.exports = function (sequelize: Sequelize): typeof Rate {
   Rate.init(
     {
       id: {
@@ -23,4 +26,4 @@ export default function (sequelize: Sequelize) {
     }
   );
   return Rate;
-}
+};

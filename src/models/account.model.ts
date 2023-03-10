@@ -19,9 +19,74 @@ export class Account
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    Account.hasOne(models.Profile, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasOne(models.Wallet, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasOne(models.Token, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+
+    Account.hasMany(models.Image, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Todo, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Notification, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Transaction, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Card, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Address, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Order, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Comment, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.Rate, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.hasMany(models.PermissionRequest, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+    Account.belongsTo(models.Country);
+    Account.belongsTo(models.Role);
+    Account.belongsToMany(models.SocialApplication, {
+      through: models.SocialAccount,
+      foreignKey: "account_id",
+    });
+    Account.hasMany(models.AccountFunctionPermission, {
+      foreignKey: "account_id",
+      onDelete: "CASCADE",
+    });
+  };
 }
 
-export default function (sequelize: Sequelize): typeof Account {
+module.exports = function (sequelize: Sequelize): typeof Account {
   Account.init(
     {
       id: {
@@ -66,4 +131,4 @@ export default function (sequelize: Sequelize): typeof Account {
   );
 
   return Account;
-}
+};

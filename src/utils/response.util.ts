@@ -116,7 +116,9 @@ export const response = (res: any, status = 200, data: any = null): void => {
   }
   if (isObject(data)) {
     data?.message && (jsonData.message = data?.message);
-    data?.data && (jsonData.data = data?.data);
+    const dataTemp = { ...data };
+    delete dataTemp["message"];
+    data?.data && (jsonData.data = { ...dataTemp });
   }
   if (isArray(data)) {
     const getErrorFirst = data?.filter((item) => item?.message)[0]?.message;

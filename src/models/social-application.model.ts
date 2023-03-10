@@ -18,9 +18,15 @@ export class SocialApplication
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
+  public static associate = (models: any): any => {
+    SocialApplication.belongsToMany(models.Account, {
+      through: models.SocialAccount,
+      foreignKey: "provider_id",
+    });
+  };
 }
 
-export default function (sequelize: Sequelize): typeof SocialApplication {
+module.exports = function (sequelize: Sequelize): typeof SocialApplication {
   SocialApplication.init(
     {
       id: {
@@ -49,4 +55,4 @@ export default function (sequelize: Sequelize): typeof SocialApplication {
   );
 
   return SocialApplication;
-}
+};

@@ -5,7 +5,7 @@ import { compareSync } from "bcrypt";
 import db from "@/models";
 import { isEmailOrPhone } from "@/utils/util";
 import { generate, validator, response } from "@/utils/index";
-const { Account, AccountRole, AccountCountry, Token } = db;
+const { Account, Token } = db;
 
 const login = async (req: Request, res: Response): Promise<void> => {
   const { username, password } = req.body;
@@ -74,6 +74,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     const newRefreshToken = generate.generateRefreshToken({
       account_id: account?.id,
     });
+
     res.setHeader("Authorization", `Bearer ${tokenAccess}`);
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
@@ -96,14 +97,8 @@ const signup = async (req: Request, res: Response): Promise<void> => {
       email,
       phone,
       password,
-    });
-    await AccountRole.create({
-      role_id: "2",
-      account_id: newUser?.id,
-    });
-    await AccountCountry.create({
+      role_id: "1",
       country_id: "1",
-      account_id: newUser?.id,
     });
 
     const accessToken = generate.generateAccessToken({ user_id: newUser?.id });
@@ -114,7 +109,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     await Token.create({
       account_id: newUser.id,
       accessToken,
-
+      refreshToken,
       type: "auth",
     });
     res.setHeader("Authorization", `Bearer ${accessToken}`);
@@ -129,7 +124,7 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     response.response(
       res,
       500,
-      error?.errors.map((item) => {
+      error?.errors?.map((item) => {
         return { message: item?.message };
       })
     );
