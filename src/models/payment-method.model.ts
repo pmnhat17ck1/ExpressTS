@@ -11,13 +11,12 @@ export class PaymentMethod extends Model implements PaymentMethod {
   public static associate = (models: any): any => {
     PaymentMethod.hasMany(models.Transaction, {
       foreignKey: "payment_method_id",
-      onDelete: "CASCADE",
     });
     PaymentMethod.hasMany(models.Card, {
       foreignKey: "payment_method_id",
-      onDelete: "CASCADE",
     });
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof PaymentMethod {
@@ -42,6 +41,7 @@ module.exports = function (sequelize: Sequelize): typeof PaymentMethod {
       },
     },
     {
+      timestamps: false,
       modelName: "PaymentMethod",
       tableName: "payment_method",
       sequelize,

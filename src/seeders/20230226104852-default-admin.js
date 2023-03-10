@@ -25,6 +25,14 @@ module.exports = {
         account_id: idAdmin,
       },
     ]);
+    await queryInterface.bulkInsert("wallets", [
+      {
+        balance: 0,
+        account_id: idAdmin,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    ]);
   },
 
   async down(queryInterface) {

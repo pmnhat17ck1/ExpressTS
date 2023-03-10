@@ -10,6 +10,7 @@ export class OrderDetail extends Model implements OrderDetail {
   public static associate = (models: any): any => {
     OrderDetail.belongsTo(models.Order);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof OrderDetail {
   OrderDetail.init(

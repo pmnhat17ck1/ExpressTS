@@ -10,6 +10,7 @@ export class Like extends Model implements Like {
     Like.belongsTo(models.Product);
     Like.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Like {
   Like.init(

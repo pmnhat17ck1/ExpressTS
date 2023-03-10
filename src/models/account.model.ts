@@ -23,65 +23,91 @@ export class Account
     Account.hasOne(models.Profile, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasOne(models.Wallet, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasOne(models.Token, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
 
     Account.hasMany(models.Image, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Todo, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Notification, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Transaction, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Card, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Address, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Order, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Comment, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.Rate, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
     Account.hasMany(models.PermissionRequest, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     });
-    Account.belongsTo(models.Country);
+    Account.belongsTo(models.Country, {
+      foreignKey: {
+        allowNull: true,
+      },
+    });
     Account.belongsTo(models.Role);
     Account.belongsToMany(models.SocialApplication, {
       through: models.SocialAccount,
       foreignKey: "account_id",
+      onDelete: "CASCADE",
     });
     Account.hasMany(models.AccountFunctionPermission, {
       foreignKey: "account_id",
       onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  };
+  public static hook = (models: any): any => {
+    Account.afterCreate((user, options) => {
+      models.Wallet.create({
+        account_id: user.id,
+      });
     });
   };
 }

@@ -12,8 +12,8 @@ export class Address extends Model implements Address {
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Address.belongsTo(models.Account);
-    Address.hasOne(models.Profile);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Address {
   Address.init(
@@ -23,12 +23,31 @@ module.exports = function (sequelize: Sequelize): typeof Address {
         autoIncrement: true,
         primaryKey: true,
       },
-      street: DataTypes.STRING,
-      city: DataTypes.STRING,
-      state: DataTypes.STRING,
-      zipCode: DataTypes.STRING,
-      location: DataTypes.STRING,
-      isDefault: DataTypes.BOOLEAN,
+      street: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      city: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      state: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      zipCode: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      isDefault: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
     },
     {
       modelName: "Address",

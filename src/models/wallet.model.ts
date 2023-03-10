@@ -10,6 +10,7 @@ export class Wallet extends Model implements Wallet {
     Wallet.belongsTo(models.Account);
     Wallet.hasMany(models.Card);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Wallet {

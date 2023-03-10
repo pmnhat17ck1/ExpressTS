@@ -42,7 +42,10 @@ export const rateForProduct = async (
     if (!rate) {
       await Rate.create({ value, comment, product_id: product.id });
     } else {
-      await Rate.update({ value, comment, where: { product_id: product.id } });
+      await Rate.update(
+        { value, comment },
+        { where: { product_id: product.id } }
+      );
     }
     response.response(res, 200, { message: "successfully" });
   } catch (error) {}

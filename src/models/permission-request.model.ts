@@ -8,6 +8,7 @@ export class PermissionRequest extends Model implements PermissionRequest {
     PermissionRequest.belongsTo(models.Function);
     PermissionRequest.belongsTo(models.Permission);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof PermissionRequest {
   PermissionRequest.init(

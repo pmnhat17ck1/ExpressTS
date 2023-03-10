@@ -20,8 +20,9 @@ export class SocialAccount
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   public static associate = (models: any): any => {};
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof SocialAccount {

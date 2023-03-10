@@ -22,6 +22,7 @@ export class Token
   public static associate = (models: any): any => {
     Token.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Token {

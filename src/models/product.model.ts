@@ -24,10 +24,14 @@ export class Product extends Model implements Product {
     });
     Product.belongsToMany(models.Order, {
       through: models.OrderDetail,
+      onDelete: "CASCADE",
       foreignKey: "product_id",
     });
-    Product.belongsToMany(models.Category, { through: "product_category" });
+    Product.belongsToMany(models.Category, {
+      through: "product_category",
+    });
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Product {

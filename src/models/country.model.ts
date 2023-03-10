@@ -21,6 +21,7 @@ export class Country
       foreignKey: "country_id",
     });
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Country {

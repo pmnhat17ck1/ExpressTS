@@ -19,6 +19,7 @@ export class Image
   public static associate = (models: any): any => {
     Image.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Image {

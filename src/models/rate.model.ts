@@ -7,6 +7,7 @@ export class Rate extends Model implements Rate {
   public static associate = (models: any): any => {
     Rate.belongsTo(models.Product);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Rate {
   Rate.init(

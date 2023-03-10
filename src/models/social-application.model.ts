@@ -24,6 +24,7 @@ export class SocialApplication
       foreignKey: "provider_id",
     });
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof SocialApplication {

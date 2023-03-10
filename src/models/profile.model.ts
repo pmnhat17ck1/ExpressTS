@@ -21,8 +21,8 @@ export class Profile
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
     Profile.belongsTo(models.Account);
-    Profile.belongsTo(models.Address);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Profile {

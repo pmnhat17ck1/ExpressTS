@@ -14,6 +14,7 @@ export class Role extends Model<RoleI, RoleCreationAttributes> implements Role {
       foreignKey: "role_id",
     });
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Role {

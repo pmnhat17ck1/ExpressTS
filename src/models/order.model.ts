@@ -19,6 +19,7 @@ export class Order extends Model implements Order {
     });
     Order.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Order {

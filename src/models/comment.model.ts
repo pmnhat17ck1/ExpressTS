@@ -10,6 +10,7 @@ export class Comment extends Model implements Comment {
     Comment.belongsTo(models.Account);
     Comment.belongsTo(models.Product);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Comment {
   Comment.init(

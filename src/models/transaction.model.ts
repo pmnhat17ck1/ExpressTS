@@ -12,6 +12,7 @@ export class Transaction extends Model implements Transaction {
     Transaction.belongsTo(models.Account);
     Transaction.belongsTo(models.PaymentMethod);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Transaction {

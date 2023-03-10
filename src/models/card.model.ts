@@ -12,6 +12,7 @@ export class Card extends Model implements Card {
     Card.belongsTo(models.Account);
     Card.belongsTo(models.PaymentMethod);
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Card {
   Card.init(

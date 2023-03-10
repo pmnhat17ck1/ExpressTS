@@ -5,10 +5,12 @@ export class AccountFunctionPermission
   implements AccountFunctionPermission
 {
   public id!: number;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   public static associate = (models: any): any => {
     AccountFunctionPermission.belongsTo(models.Account);
   };
+
+  public static hook = (models: any): any => {};
 }
 module.exports = function (
   sequelize: Sequelize

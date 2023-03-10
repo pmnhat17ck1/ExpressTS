@@ -20,6 +20,7 @@ export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
   public static associate = (models: any): any => {
     Todo.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Todo {

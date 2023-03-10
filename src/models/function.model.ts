@@ -6,8 +6,10 @@ export class Function extends Model implements Function {
   public static associate = (models: any): any => {
     Function.belongsToMany(models.Account, {
       through: models.AccountFunctionPermission,
+      onDelete: "CASCADE",
     });
   };
+  public static hook = (models: any): any => {};
 }
 module.exports = function (sequelize: Sequelize): typeof Function {
   Function.init(

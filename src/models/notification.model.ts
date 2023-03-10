@@ -10,6 +10,7 @@ export class Notification extends Model implements Notification {
   public static associate = (models: any): any => {
     Notification.belongsTo(models.Account);
   };
+  public static hook = (models: any): any => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof Notification {
