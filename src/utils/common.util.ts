@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
-import config from '../config';
 
 export const apiLimiter = (
   time = 60 * 1000,
@@ -30,17 +29,6 @@ export const decodedToken = (token: any): any => {
   return decoded?.payload;
 };
 
-export const verifyToken = (token: any, key = config.JWT_SECRET): any => {
-  const decoded: any = jwt.verify(token, key);
-  const isError = [null, undefined, '', {}, NaN].includes(decoded);
-  if (isError) {
-    throw new Error(`provided token does not decode as JWT`);
-  }
-  return decoded;
-};
-
-export const checkExpiredToken = (exp = 0): any => Date.now() >= exp * 1000;
-
 export const getAppVersion = (version) => {
   const versionArray = version.split('.');
   const appVersion = versionArray[0];
@@ -50,5 +38,4 @@ export const getAppVersion = (version) => {
 export default {
   apiLimiter,
   decodedToken,
-  checkExpiredToken,
 };

@@ -1,3 +1,4 @@
-const a = '';
+import { EmailService } from './email.service';
+import { UploadService } from './upload.service';
 
-export default { a };
+export { EmailService, UploadService };

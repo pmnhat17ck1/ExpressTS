@@ -2,14 +2,16 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { compareSync } from 'bcrypt';
 
-import db from '@/models';
+import { LoginAccountDTO } from '@dtos/account.dto';
+
 import { isEmailOrPhone } from '@/utils/util';
-import { generate, validator, response } from '@/utils/index';
+import { jwt, validator, response } from '@/utils/index';
+
+import db from '@/models';
 const { Account, Token } = db;
 
 const login = async (req: Request, res: Response): Promise<void> => {
-  const { username, password } = req.body;
-
+  const { username, password }: LoginAccountDTO = req.body;
   const input = { email: '', username: '', phone: '' };
 
   switch (isEmailOrPhone(username)) {
@@ -49,7 +51,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!account) {
-      return response.response(res, 404, 'user_not_found');
+      return response.response(res, 404, 'account_not_found');
     }
     if (!compareSync(password, account.password)) {
       return response.response(res, 401, 'incorrect_password');
@@ -61,20 +63,26 @@ const login = async (req: Request, res: Response): Promise<void> => {
       },
     });
     tokenAccess = tokenAccount?.accessToken;
-
+    const newAccessToken = jwt.generateAccessToken({
+      account_id: account?.id,
+    });
+    const newRefreshToken = jwt.generateRefreshToken({
+      account_id: account?.id,
+    });
     if (!tokenAccess) {
-      const newAccessToken = generate.generateAccessToken({
-        account_id: account?.id,
-      });
       tokenAccount.update({
         accessToken: newAccessToken,
       });
       tokenAccess = newAccessToken;
     }
-    const newRefreshToken = generate.generateRefreshToken({
-      account_id: account?.id,
-    });
-
+    const payload = jwt.verifyToken(tokenAccess);
+    if (jwt.checkExpiredToken(payload.exp)) {
+      tokenAccount.update({
+        accessToken: newAccessToken,
+      });
+      tokenAccess = newAccessToken;
+    }
+    tokenAccount.save();
     res.setHeader('Authorization', `Bearer ${tokenAccess}`);
     res.cookie('refreshToken', newRefreshToken, {
       httpOnly: true,
@@ -87,27 +95,27 @@ const login = async (req: Request, res: Response): Promise<void> => {
     response.response(res, 500, error);
   }
 };
-
 const signup = async (req: Request, res: Response): Promise<void> => {
-  const { email, username, phone, password } = req.body ?? {};
-
+  const { email, username, phone, password } = req.body;
   try {
-    const newUser = await Account.create({
+    const newAccount = await Account.create({
       username,
       email,
       phone,
       password,
-      role_id: '1',
-      country_id: '1',
+      role_id: 1,
+      country_id: 1,
     });
 
-    const accessToken = generate.generateAccessToken({ user_id: newUser?.id });
-    const refreshToken = generate.generateRefreshToken(
-      { user_id: newUser?.id },
+    const accessToken = jwt.generateAccessToken({
+      account_id: newAccount?.id,
+    });
+    const refreshToken = jwt.generateRefreshToken(
+      { account_id: newAccount?.id },
       '3h'
     );
     await Token.create({
-      account_id: newUser.id,
+      account_id: newAccount.id,
       accessToken,
       refreshToken,
       type: 'auth',
@@ -130,11 +138,10 @@ const signup = async (req: Request, res: Response): Promise<void> => {
     );
   }
 };
-
 const logout = async (req: Request, res: Response): Promise<void> => {
   res.setHeader('Authorization', '');
   res.clearCookie('refreshToken');
   response.response(res, 200, 'logout_success');
 };
 
-export { login, signup, logout };
+export { login, logout, signup };

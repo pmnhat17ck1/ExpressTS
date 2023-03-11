@@ -30,7 +30,8 @@
       "@models/*": ["models/*"],
       "@routes/*": ["routes/*"],
       "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"]
+      "@utils/*": ["utils/*"],
+      "@exceptions/*": ["exceptions/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/config/config.js"],

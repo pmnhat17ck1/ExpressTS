@@ -68,3 +68,4 @@ const stream = {
 };
 
 export { logger, stream };
+export default { logger, stream };

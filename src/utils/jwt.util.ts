@@ -29,8 +29,24 @@ export const randomHexCode = (randombytes: any, type: any) =>
     .toString(type || 'hex')
     .toUpperCase();
 
+export const verifyToken = (
+  token: any,
+  key = process.env.ACCESS_TOKEN_SECRET
+): any => {
+  const decoded: any = jwt.verify(token, key);
+  const isError = [null, undefined, '', {}, NaN].includes(decoded);
+  if (isError) {
+    throw new Error(`provided token does not decode as JWT`);
+  }
+  return decoded;
+};
+
+export const checkExpiredToken = (exp = 0): any => Date.now() >= exp * 1000;
+
 export default {
   generateAccessToken,
   generateRefreshToken,
   randomHexCode,
+  verifyToken,
+  checkExpiredToken,
 };

@@ -37,3 +37,11 @@ export const isObject = (data) => !isArray(data) && data === Object(data);
 export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
+export default {
+  capitalizeFirstLetter,
+  isObject,
+  isArray,
+  isString,
+  isEmailOrPhone,
+  isEmpty,
+};
