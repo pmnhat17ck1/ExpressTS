@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.bulkInsert("countries", [
+    await queryInterface.bulkInsert('countries', [
       {
-        name: "Việt Nam",
-        code: "vi",
+        name: 'Việt Nam',
+        code: 'vi',
       },
       {
-        name: "English",
-        code: "en",
+        name: 'English',
+        code: 'en',
       },
     ]);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("countries", null, {});
+    await queryInterface.bulkDelete('countries', null, {});
   },
 };
