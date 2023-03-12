@@ -1,17 +1,23 @@
 import { Router } from 'express';
-import {
-  getAllTodos,
-  createTodo,
-  updateTodo,
-  deleteTodo,
-} from '../controllers/todo.controller';
+import { TodoController } from '../controllers/todo.controller';
+import { Routes } from '@interfaces/routes.interface';
 import { authenticate } from '../middlewares/auth.middleware';
 
-const router = Router();
-router.use(authenticate);
-router.get('/todos', getAllTodos);
-router.post('/todos', createTodo);
-router.put('/todos/:id', updateTodo);
-router.delete('/todos/:id', deleteTodo);
+class TodoRoute implements Routes {
+  public path = '/';
+  public router = Router();
+  public todoController = new TodoController();
 
-export default router;
+  constructor() {
+    this.initializeRoutes();
+  }
+
+  private initializeRoutes() {
+    this.router.use(authenticate);
+    this.router.get(`${this.path}todos`, this.todoController.getAllTodos);
+    this.router.post(`${this.path}todos`, this.todoController.createTodo);
+    this.router.put(`${this.path}todos/:id`, this.todoController.updateTodo);
+    this.router.delete(`${this.path}todos/:id`, this.todoController.deleteTodo);
+  }
+}
+export { TodoRoute };

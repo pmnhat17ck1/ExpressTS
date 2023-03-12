@@ -1,35 +1,39 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response, Application } from 'express';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import hpp from 'hpp';
 import helmet from 'helmet';
 import compression from 'compression';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 import DB from '@models/index';
 import config from '@config';
 import { logger, stream } from '@utils/logger';
 import errorHandler from '@middlewares/error.middleware';
-import { getRoutes } from '@routes/index';
+import { GetRoutes } from '@routes/index';
 import { getAppVersion } from '@utils/common.util';
 
 class App {
-  public app: express.Application;
+  public app: Application;
   public env: string;
   public version: string;
   public port: string | number;
+  public routes: any;
 
   constructor() {
     this.app = express();
     this.env = config.NODE_ENV || 'development';
     this.version = config.APP_VERSION || 'default';
     this.port = config.PORT || 8000;
-
+    this.routes = new GetRoutes();
     this.connectToDatabase();
     this.syncDatabase();
     this.syncAssociations();
     this.initializeMiddlewares();
     this.initializeRoutes();
+    this.initializeSwagger();
     this.initializeErrorHandling();
   }
 
@@ -103,7 +107,23 @@ class App {
       res.setHeader('Last-Modified', new Date().toUTCString());
       next();
     });
-    this.app.use(`/api/${getAppVersion(this.version)}`, getRoutes());
+    this.app.use(`/api/${getAppVersion(this.version)}`, this.routes.router);
+  }
+
+  private initializeSwagger() {
+    const options = {
+      swaggerDefinition: {
+        info: {
+          title: 'REST API',
+          version: '1.0.0',
+          description: 'Example docs',
+        },
+      },
+      apis: ['swagger.yaml'],
+    };
+
+    const specs = swaggerJSDoc(options);
+    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private initializeErrorHandling() {
