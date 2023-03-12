@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CountryI } from '@/interfaces/country.interface';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
 import db from '@/models';
 const { Country } = db;
 //products/:id/ratings
@@ -11,9 +11,9 @@ class CountryController {
       const countries: CountryI = await Country.findAll({
         where: {},
       });
-      response.response(res, 200, { message: 'successfully', countries });
+      response(res, 200, countries, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 
@@ -27,10 +27,9 @@ class CountryController {
         name,
         code,
       });
-
-      response.response(res, 200, { message: 'successfully', country });
+      response(res, 200, country, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public updateCountryByAccount = async (
@@ -51,9 +50,9 @@ class CountryController {
           },
         }
       );
-      response.response(res, 200, { message: 'successfully', country });
+      response(res, 200, country, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public deleteCountryByAccount = async (
@@ -64,12 +63,12 @@ class CountryController {
       const { country_id } = req.body;
       const country = await Country.findByPk(country_id);
       if (!country) {
-        return response.response(res, 404, 'Country not found');
+        return response(res, 404);
       }
       await country.destroy();
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

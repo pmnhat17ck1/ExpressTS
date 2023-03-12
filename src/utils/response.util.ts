@@ -95,15 +95,21 @@ export const statusRes = (status: number) => {
     response = { success: true, message: statusRedirection[status] };
   }
   if (status >= 309 && status <= 499) {
-    response = { success: true, message: StatusClientError[status] };
+    response = { success: false, message: StatusClientError[status] };
   }
   if (status >= 500 && status <= 599) {
-    response = { success: true, message: statusServerError[status] };
+    response = { success: false, message: statusServerError[status] };
   }
+
   return response;
 };
 
-export const response = (res: any, status = 200, data: any = null): void => {
+export const response = (
+  res: any,
+  status = 200,
+  data: any = null,
+  message = ''
+): void => {
   const jsonData = {
     ...statusRes(status),
     data,
@@ -118,7 +124,12 @@ export const response = (res: any, status = 200, data: any = null): void => {
     data?.message && (jsonData.message = data?.message);
     const dataTemp = { ...data };
     delete dataTemp['message'];
+    const valueData = Object.values(data) || [];
     data?.data && (jsonData.data = { ...dataTemp });
+    if (valueData.length !== 0) {
+      jsonData.message = message || jsonData.message;
+      jsonData.data = valueData[0];
+    }
   }
   if (isArray(data)) {
     const getErrorFirst = data?.filter((item) => item?.message)[0]?.message;

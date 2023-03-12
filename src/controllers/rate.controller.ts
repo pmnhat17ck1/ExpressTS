@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import db from '@/models';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
 const { Rate, Product } = db;
 //products/:id/ratings
 class RateController {
@@ -12,16 +12,16 @@ class RateController {
     try {
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const rates = await Rate.findAll({
         where: {
           product_id: product.id,
         },
       });
-      response.response(res, 200, { message: 'successfully', rates });
+      response(res, 200, rates, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public rateForProduct = async (
@@ -32,7 +32,7 @@ class RateController {
       const { value, comment } = req.body;
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const rate = await Rate.fineOne({
         where: {
@@ -47,9 +47,9 @@ class RateController {
           { where: { product_id: product.id } }
         );
       }
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public deleteRateForProduct = async (
@@ -59,7 +59,7 @@ class RateController {
     try {
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const rate = await Rate.fineOne({
         where: {
@@ -67,12 +67,12 @@ class RateController {
         },
       });
       if (!rate) {
-        return response.response(res, 404, 'Rate not found');
+        return response(res, 404);
       }
       await rate.destroy();
-      response.response(res, 204);
+      response(res, 204);
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

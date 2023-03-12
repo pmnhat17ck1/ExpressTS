@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 
 import { CreateAccountDTO, UpdateAccountDTO } from '@/dtos/account.dto';
 import { AccountI } from '@/interfaces/account.interface';
-import { jwt, response } from '@/utils/index';
+import { jwt } from '@/utils/index';
+import { response } from '@/utils/response.util';
+
 import db from '@/models';
 const { Account, Token, Country, Role } = db;
 //products/:id/ratings
@@ -13,9 +15,9 @@ class AccountController {
       const accounts: AccountI = await Account.findAll({
         where: {},
       });
-      response.response(res, 200, { message: 'successfully', accounts });
+      response(res, 200, accounts, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   // guest
@@ -47,11 +49,11 @@ class AccountController {
         },
       });
       if (!account) {
-        return response.response(res, 404, 'account_not_found');
+        return response(res, 404);
       }
-      response.response(res, 200, { message: 'successfully', account });
+      response(res, 200, account, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public createAccount = async (req: any, res: Response): Promise<void> => {
@@ -80,10 +82,9 @@ class AccountController {
         refreshToken,
         type: 'account',
       });
-
-      response.response(res, 200, 'signup_success');
+      response(res, 200, 'signup_success');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public updateAccount = async (req: any, res: Response): Promise<void> => {
@@ -106,11 +107,11 @@ class AccountController {
         }
       );
       if (!account) {
-        return response.response(res, 404, 'account_not_found');
+        return response(res, 404);
       }
-      response.response(res, 200, { message: 'successfully', account });
+      response(res, 200, account, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public deleteAccount = async (req: Request, res: Response): Promise<void> => {
@@ -118,12 +119,12 @@ class AccountController {
       const account_id = req.params.account_id;
       const addressFound = await Account.findByPk(account_id);
       if (!addressFound) {
-        return response.response(res, 404, 'account_not_found');
+        return response(res, 404);
       }
       await addressFound.destroy();
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

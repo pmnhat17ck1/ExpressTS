@@ -5,7 +5,8 @@ import { compareSync } from 'bcrypt';
 import { LoginAccountDTO } from '@dtos/account.dto';
 
 import { isEmailOrPhone } from '@/utils/util';
-import { jwt, validator, response } from '@/utils/index';
+import { jwt, validator } from '@/utils/index';
+import { response } from '@/utils/response.util';
 
 import db from '@/models';
 const { Account, Token, Country, Role } = db;
@@ -34,7 +35,7 @@ class AuthController {
     }
     const result = validator.validateErrors(req);
     if (result?.length) {
-      response.response(res, 422, result);
+      response(res, 422, result);
       return;
     }
     try {
@@ -71,10 +72,10 @@ class AuthController {
       });
 
       if (!account) {
-        return response.response(res, 404, 'account_not_found');
+        return response(res, 404);
       }
       if (!compareSync(password, account.password)) {
-        return response.response(res, 401, 'incorrect_password');
+        return response(res, 401, 'incorrect_password');
       }
       let tokenAccess;
       const tokenAccount = await Token.findOne({
@@ -110,9 +111,9 @@ class AuthController {
         path: '/',
         sameSite: 'strict',
       });
-      response.response(res, 203, { message: 'login_success', account });
+      response(res, 203, account, 'login_success');
     } catch (error) {
-      response.response(res, 500, error);
+      response(res, 500, error);
     }
   };
   public signUp = async (req: Request, res: Response): Promise<void> => {
@@ -149,9 +150,9 @@ class AuthController {
         path: '/',
         sameSite: 'strict',
       });
-      response.response(res, 200, 'signup_success');
+      response(res, 200, 'signup_success');
     } catch (error) {
-      response.response(
+      response(
         res,
         500,
         error?.errors?.map((item) => {
@@ -163,7 +164,7 @@ class AuthController {
   public logOut = async (req: Request, res: Response): Promise<void> => {
     res.setHeader('Authorization', '');
     res.clearCookie('refreshToken');
-    response.response(res, 200, 'logout_success');
+    response(res, 200, 'logout_success');
   };
 }
 

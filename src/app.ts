@@ -13,7 +13,7 @@ import config from '@config';
 import { logger, stream } from '@utils/logger';
 import errorHandler from '@middlewares/error.middleware';
 import { GetRoutes } from '@routes/index';
-import { getAppVersion } from '@utils/common.util';
+import { getAppVersion, apiLimiter } from '@utils/common.util';
 
 class App {
   public app: Application;
@@ -103,11 +103,19 @@ class App {
   }
 
   private initializeRoutes() {
-    this.app.get('/*', (req: Request, res: Response, next: NextFunction) => {
-      res.setHeader('Last-Modified', new Date().toUTCString());
-      next();
-    });
-    this.app.use(`/api/${getAppVersion(this.version)}`, this.routes.router);
+    this.app.get(
+      '/*',
+      apiLimiter(),
+      (req: Request, res: Response, next: NextFunction) => {
+        res.setHeader('Last-Modified', new Date().toUTCString());
+        next();
+      }
+    );
+    this.app.use(
+      `/api/${getAppVersion(this.version)}`,
+      apiLimiter(),
+      this.routes.router
+    );
   }
 
   private initializeSwagger() {
@@ -123,7 +131,12 @@ class App {
     };
 
     const specs = swaggerJSDoc(options);
-    this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    this.app.use(
+      '/api-docs',
+      apiLimiter(),
+      swaggerUi.serve,
+      swaggerUi.setup(specs)
+    );
   }
 
   private initializeErrorHandling() {

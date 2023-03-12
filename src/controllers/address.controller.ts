@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 
 import db from '@/models';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
+
 const { Address } = db;
 //products/:id/ratings
 class AddressController {
@@ -14,11 +15,11 @@ class AddressController {
         where: { account_id: req.account.id },
       });
       if (!address) {
-        return response.response(res, 404, 'Address not found');
+        return response(res, 404);
       }
-      response.response(res, 200, { message: 'successfully', address });
+      response(res, 200, address, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public createAddressByAccount = async (
@@ -36,9 +37,9 @@ class AddressController {
         isDefault,
         account_id: req.account.id,
       });
-      response.response(res, 200, { message: 'successfully', address });
+      response(res, 200, address, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public updateAddressByAccount = async (
@@ -62,9 +63,9 @@ class AddressController {
           },
         }
       );
-      response.response(res, 200, { message: 'successfully', address });
+      response(res, 200, address, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public deleteAddressByAccount = async (
@@ -75,12 +76,12 @@ class AddressController {
       const { address_id } = req.body;
       const addressFound = await Address.findByPk(address_id);
       if (!addressFound) {
-        return response.response(res, 404, 'Address not found');
+        return response(res, 404);
       }
       await addressFound.destroy();
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 import { ProfileI } from '@/interfaces/profile.interface';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util;
 import db from '@/models';
 const { Profile } = db;
 //products/:id/ratings
@@ -11,9 +11,9 @@ class ProfileController {
       const profiles: ProfileI = await Profile.findAll({
         where: {},
       });
-      response.response(res, 200, { message: 'successfully', profiles });
+      response(res, 200, profiles, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 
@@ -27,9 +27,9 @@ class ProfileController {
           account_id: req.account.id,
         },
       });
-      response.response(res, 200, { message: 'successfully', profiles });
+      response(res, 200, profiles, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 
@@ -40,7 +40,7 @@ class ProfileController {
     try {
       const { fullName, dateOfBirth, avatar } = req.body;
 
-      const country = await Profile.update(
+      const profile = await Profile.update(
         {
           fullName,
           dateOfBirth,
@@ -52,9 +52,9 @@ class ProfileController {
           },
         }
       );
-      response.response(res, 200, { message: 'successfully', country });
+      response(res, 200, profile, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

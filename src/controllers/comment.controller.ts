@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import db from '@/models';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
 const { Comment, Product } = db;
 //products/:id/comments
 class CommentController {
@@ -13,12 +13,12 @@ class CommentController {
       const { text } = req.body;
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const comment = await Comment.create({ text, product_id: product.id });
-      response.response(res, 200, { message: 'successfully', comment });
+      response(res, 200, comment, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

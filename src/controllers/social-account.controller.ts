@@ -12,7 +12,7 @@
 //       where: { provider, socialId },
 //     });
 //     if (!socialAccount) {
-//       return res.status(400).json({ message: "Social account not found" });
+//       return res.status(400).json({ message: "Social account no_found" });
 //     }
 //     const account = await Account.findOne({
 //       where: { [Op.or]: [{ email }, { phoneNumber }] },
@@ -58,14 +58,14 @@
 //       where: { provider, socialId },
 //     });
 //     if (!socialAccount) {
-//       return res.status(404).send({ message: "Social account not found" });
+//       return res.status(404).send({ message: "Social account no_found" });
 //     }
 
 //     const existingUser = await User.findOne({
 //       where: { id: socialAccount.account_id },
 //     });
 //     if (!existingUser) {
-//       return res.status(404).send({ message: "User not found" });
+//       return res.status(404).send({ message: "User no_found" });
 //     }
 
 //     if (existingUser.id !== user.id) {

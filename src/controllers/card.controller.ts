@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 import { CreateCardDTO } from '@/dtos/card.dto';
 import { AccountI } from '@/interfaces/account.interface';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
 import db from '@/models';
 const { Card, Wallet } = db;
 //products/:id/ratings
@@ -12,12 +12,12 @@ class CardController {
     res: Response
   ): Promise<void> => {
     try {
-      const accounts: AccountI = await Card.findAll({
+      const cards: AccountI = await Card.findAll({
         where: { account_id: req.account.id },
       });
-      response.response(res, 200, { message: 'successfully', accounts });
+      response(res, 200, cards, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public createCardByAccount = async (
@@ -45,10 +45,9 @@ class CardController {
         payment_method_id,
         wallet_id: walletOfAccount.id,
       });
-
-      response.response(res, 200, { message: 'successfully', card });
+      response(res, 200, card, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public updateCardByAccount = async (
@@ -77,9 +76,9 @@ class CardController {
           },
         }
       );
-      response.response(res, 200, { message: 'successfully', card });
+      response(res, 200, card, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
   public deleteCardByAccount = async (
@@ -90,12 +89,12 @@ class CardController {
     try {
       const cardFound = await Card.findByPk(card_id);
       if (!cardFound) {
-        return response.response(res, 404, 'Card not found');
+        return response(res, 404);
       }
       await cardFound.destroy();
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

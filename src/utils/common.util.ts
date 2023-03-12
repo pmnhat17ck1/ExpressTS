@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 
 export const apiLimiter = (
   time = 60 * 1000,
-  maxReq = 10,
+  maxReq = 60,
   msg = {
     success: false,
     message: 'Fail!',
@@ -11,8 +11,8 @@ export const apiLimiter = (
   }
 ): any =>
   rateLimit({
-    windowMs: time, // 1 minutes
-    max: maxReq, // Limit each IP to 10 requests per `window` (here, per 1 minutes)
+    windowMs: time, // 1 phút
+    max: maxReq, // Giới hạn 1000 yêu cầu
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     statusCode: 429,

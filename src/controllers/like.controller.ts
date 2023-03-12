@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import db from '@/models';
-import { response } from '@/utils/index';
+import { response } from '@/utils/response.util';
 const { Like, Product } = db;
 //products/:id/likes
 class LikeController {
@@ -12,16 +12,16 @@ class LikeController {
     try {
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const likes = await Like.findAll({
         where: {
           product_id: product.id,
         },
       });
-      response.response(res, 200, { message: 'successfully', likes });
+      response(res, 200, likes, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 
@@ -33,7 +33,7 @@ class LikeController {
       const { like } = req.body;
       const product = await Product.findByPk(req.params.id);
       if (!product) {
-        return response.response(res, 404, 'Product not found');
+        return response(res, 404);
       }
       const likeFound = await Like.fineOne({
         where: {
@@ -48,9 +48,9 @@ class LikeController {
           where: { product_id: product.id },
         });
       }
-      response.response(res, 200, { message: 'successfully' });
+      response(res, 200, 'successfully');
     } catch (error) {
-      response.response(res, 500);
+      response(res, 500);
     }
   };
 }

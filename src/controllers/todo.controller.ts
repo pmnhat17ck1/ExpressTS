@@ -58,9 +58,9 @@ class TodoController {
 
     try {
       const todos = await Todo.create({ title, description });
-      res.status(201).json(todos);
+      response(res, 201, todos);
     } catch (error) {
-      res.status(500).json();
+      response(res, 500);
     }
   };
   public updateTodo = async (req: Request, res: Response): Promise<void> => {
@@ -71,8 +71,7 @@ class TodoController {
       const todo = await Todo.findByPk(id);
 
       if (!todo) {
-        res.status(404).json({ message: 'Todo not found' });
-        return;
+        return response(res, 404);
       }
 
       todo.title = title || todo.title;
@@ -92,15 +91,13 @@ class TodoController {
       const todo = await Todo.findByPk(id);
 
       if (!todo) {
-        res.status(404).json({ message: 'Todo not found' });
-        return;
+        return response(res, 404);
       }
 
       await todo.destroy();
-
-      res.status(204).json();
+      response(res, 204);
     } catch (error) {
-      res.status(500).json();
+      response(res, 500);
     }
   };
 }
