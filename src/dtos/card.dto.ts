@@ -12,7 +12,11 @@ export class CreateCardDTO {
 
   @IsNumber()
   public payment_method_id: number;
+}
 
+export class UpdateCardDTO extends CreateCardDTO {
   @IsNumber()
   public card_id: number;
 }
+
+export class DeleteCardDTO extends UpdateCardDTO {}

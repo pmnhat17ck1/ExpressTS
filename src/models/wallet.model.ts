@@ -2,7 +2,7 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 
 export class Wallet extends Model implements Wallet {
   public id!: number;
-  public balance!: string;
+  public balance!: number;
 
   public created_at!: Date;
   public updated_at!: Date;

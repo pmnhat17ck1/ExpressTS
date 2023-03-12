@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import { compareSync } from 'bcrypt';
 
-import { LoginAccountDTO } from '@dtos/account.dto';
-
+import { LoginAccountDTO, CreateAccountDTO } from '@dtos/account.dto';
+import { AccountI } from '@interfaces/account.interface';
 import { isEmailOrPhone } from '@/utils/util';
 import { jwt, validator } from '@/utils/index';
 import { response } from '@/utils/response.util';
@@ -39,7 +39,7 @@ class AuthController {
       return;
     }
     try {
-      const account = await Account.findOne({
+      const account: AccountI = await Account.findOne({
         where: {
           [Op.or]: [
             { email: input.email },
@@ -118,7 +118,7 @@ class AuthController {
   };
   public signUp = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { email, username, phone, password } = req.body;
+      const { email, username, phone, password }: CreateAccountDTO = req.body;
 
       const newAccount = await Account.create({
         username,

@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import db from '@/models';
 import { response } from '@/utils/response.util';
-
+import { TodoI } from '@/interfaces/todo.interface';
+import { CreateTodoDTO, DeleteTodoDTO, UpdateTodoDTO } from '@/dtos/todo.dto';
 const { Todo } = db;
 class TodoController {
   public getAllTodos = async (req: any, res: Response): Promise<void> => {
     try {
-      const todos = await Todo.findAll();
+      const todos: TodoI = await Todo.findAll();
       response(res, 200, todos);
     } catch (error) {
       response(res, 500);
@@ -28,7 +29,7 @@ class TodoController {
     res: Response
   ): Promise<void> => {
     try {
-      const todos = await Todo.findAll({
+      const todos: TodoI = await Todo.findAll({
         where: { account_id: req.account.id },
       });
       response(res, 200, todos);
@@ -41,7 +42,7 @@ class TodoController {
     res: Response
   ): Promise<void> => {
     try {
-      const { listTodoIds } = req.body;
+      const { listTodoIds }: DeleteTodoDTO = req.body;
 
       await Todo.destroy({
         where: {
@@ -54,10 +55,10 @@ class TodoController {
     }
   };
   public createTodo = async (req: Request, res: Response): Promise<void> => {
-    const { title, description } = req.body;
+    const { title, description }: CreateTodoDTO = req.body;
 
     try {
-      const todos = await Todo.create({ title, description });
+      const todos: TodoI = await Todo.create({ title, description });
       response(res, 201, todos);
     } catch (error) {
       response(res, 500);
@@ -65,7 +66,7 @@ class TodoController {
   };
   public updateTodo = async (req: Request, res: Response): Promise<void> => {
     const id = parseInt(req.params.id, 10);
-    const { title, description } = req.body;
+    const { title, description }: UpdateTodoDTO = req.body;
 
     try {
       const todo = await Todo.findByPk(id);

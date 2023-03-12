@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 
 import db from '@/models';
 import { response } from '@/utils/response.util';
+import { LikeI } from '@/interfaces/like.interface';
+import { ProductI } from '@/interfaces/product.interface';
+
+import { CreateLikeDTO } from '@/dtos/like.dto';
 const { Like, Product } = db;
 //products/:id/likes
 class LikeController {
@@ -10,11 +14,11 @@ class LikeController {
     res: Response
   ): Promise<void> => {
     try {
-      const product = await Product.findByPk(req.params.id);
+      const product: ProductI = await Product.findByPk(req.params.id);
       if (!product) {
         return response(res, 404);
       }
-      const likes = await Like.findAll({
+      const likes: LikeI = await Like.findAll({
         where: {
           product_id: product.id,
         },
@@ -30,7 +34,7 @@ class LikeController {
     res: Response
   ): Promise<void> => {
     try {
-      const { like } = req.body;
+      const { like }: CreateLikeDTO = req.body;
       const product = await Product.findByPk(req.params.id);
       if (!product) {
         return response(res, 404);

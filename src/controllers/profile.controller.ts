@@ -1,7 +1,8 @@
 import { Response } from 'express';
 
 import { ProfileI } from '@/interfaces/profile.interface';
-import { response } from '@/utils/response.util;
+import { CreateProfileDTO } from '@/dtos/profile.dto';
+import { response } from '@/utils/response.util';
 import db from '@/models';
 const { Profile } = db;
 //products/:id/ratings
@@ -38,7 +39,7 @@ class ProfileController {
     res: Response
   ): Promise<void> => {
     try {
-      const { fullName, dateOfBirth, avatar } = req.body;
+      const { fullName, dateOfBirth, avatar }: CreateProfileDTO = req.body;
 
       const profile = await Profile.update(
         {

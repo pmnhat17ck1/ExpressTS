@@ -91,8 +91,8 @@ class AccountController {
     try {
       const { email, username, phone, password, is_active }: UpdateAccountDTO =
         req.body;
-      const account_id: CreateAccountDTO = req.params.account_id;
-      const account = await Account.update(
+      const account_id = req.params.account_id;
+      const account: AccountI = await Account.update(
         {
           email,
           username,

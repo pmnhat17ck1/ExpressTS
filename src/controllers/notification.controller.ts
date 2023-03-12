@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 
-import db from '@/models';
 import { response } from '@/utils/response.util';
+import { NotificationI } from '@/interfaces/notification.interface';
+import {
+  CreateNotificationDTO,
+  UpdateNotificationDTO,
+  DeleteNotificationDTO,
+} from '@/dtos/notification.dto';
+import db from '@/models';
 const { Notification } = db;
 //products/:id/ratings
 class NotificationController {
@@ -10,7 +16,7 @@ class NotificationController {
     res: Response
   ): Promise<void> => {
     try {
-      const notifications = await Notification.findAll({
+      const notifications: NotificationI = await Notification.findAll({
         where: { account_id: req.account.id },
       });
       if (!notifications) {
@@ -26,7 +32,7 @@ class NotificationController {
     res: Response
   ): Promise<void> => {
     try {
-      const { content, isRead } = req.body;
+      const { content, isRead }: CreateNotificationDTO = req.body;
 
       const notification = await Notification.create({
         content,
@@ -43,7 +49,8 @@ class NotificationController {
     res: Response
   ): Promise<void> => {
     try {
-      const { content, isRead, notification_id } = req.body;
+      const { content, isRead, notification_id }: UpdateNotificationDTO =
+        req.body;
 
       const notification = await Notification.update(
         {
@@ -66,7 +73,7 @@ class NotificationController {
     res: Response
   ): Promise<void> => {
     try {
-      const { notification_id } = req.body;
+      const { notification_id }: DeleteNotificationDTO = req.body;
       const notification = await Notification.findByPk(notification_id);
       if (!notification) {
         return response(res, 404);

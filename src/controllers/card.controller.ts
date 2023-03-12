@@ -1,7 +1,10 @@
 import { Response } from 'express';
 
-import { CreateCardDTO } from '@/dtos/card.dto';
 import { AccountI } from '@/interfaces/account.interface';
+import { WalletI } from '@/interfaces/wallet.interface';
+import { CardI } from '@/interfaces/card.interface';
+import { CreateCardDTO, UpdateCardDTO, DeleteCardDTO } from '@/dtos/card.dto';
+
 import { response } from '@/utils/response.util';
 import db from '@/models';
 const { Card, Wallet } = db;
@@ -32,13 +35,13 @@ class CardController {
         payment_method_id,
       }: CreateCardDTO = req.body;
 
-      const walletOfAccount = await Wallet.findOne({
+      const walletOfAccount: WalletI = await Wallet.findOne({
         where: {
           account_id: req.account.id,
         },
       });
 
-      const card = await Card.create({
+      const card: CardI = await Card.create({
         cardNumber,
         expirationDate,
         cvv,
@@ -61,7 +64,7 @@ class CardController {
         cvv,
         payment_method_id,
         card_id,
-      }: CreateCardDTO = req.body;
+      }: UpdateCardDTO = req.body;
 
       const card = await Card.update(
         {
@@ -85,7 +88,7 @@ class CardController {
     req: any,
     res: Response
   ): Promise<void> => {
-    const { card_id }: CreateCardDTO = req.body;
+    const { card_id }: DeleteCardDTO = req.body;
     try {
       const cardFound = await Card.findByPk(card_id);
       if (!cardFound) {

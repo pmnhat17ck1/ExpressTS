@@ -3,7 +3,7 @@ import { Sequelize, DataTypes, Model } from 'sequelize';
 export class Rate extends Model implements Rate {
   public id!: number;
   public value!: string;
-  public comment!: number;
+  public comment!: string;
   public static associate = (models: any): any => {
     Rate.belongsTo(models.Product, {
       onDelete: 'CASCADE',

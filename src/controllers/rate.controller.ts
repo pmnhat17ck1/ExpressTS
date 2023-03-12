@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 
 import db from '@/models';
 import { response } from '@/utils/response.util';
+import { ProductI } from '@/interfaces/product.interface';
+import { RateI } from './../interfaces/rate.interface';
+import { CreateRateDTO } from '@/dtos/rate.dto';
+
 const { Rate, Product } = db;
 //products/:id/ratings
 class RateController {
@@ -10,11 +14,11 @@ class RateController {
     res: Response
   ): Promise<void> => {
     try {
-      const product = await Product.findByPk(req.params.id);
+      const product: ProductI = await Product.findByPk(req.params.id);
       if (!product) {
         return response(res, 404);
       }
-      const rates = await Rate.findAll({
+      const rates: RateI = await Rate.findAll({
         where: {
           product_id: product.id,
         },
@@ -29,12 +33,12 @@ class RateController {
     res: Response
   ): Promise<void> => {
     try {
-      const { value, comment } = req.body;
-      const product = await Product.findByPk(req.params.id);
+      const { value, comment }: CreateRateDTO = req.body;
+      const product: ProductI = await Product.findByPk(req.params.id);
       if (!product) {
         return response(res, 404);
       }
-      const rate = await Rate.fineOne({
+      const rate: RateI = await Rate.fineOne({
         where: {
           product_id: product.id,
         },
@@ -57,7 +61,7 @@ class RateController {
     res: Response
   ): Promise<void> => {
     try {
-      const product = await Product.findByPk(req.params.id);
+      const product: ProductI = await Product.findByPk(req.params.id);
       if (!product) {
         return response(res, 404);
       }

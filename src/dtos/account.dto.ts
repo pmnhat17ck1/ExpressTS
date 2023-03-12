@@ -20,14 +20,14 @@ class CreateAccountDTO {
   @IsPhoneNumber('VN')
   public phone: number;
 
-  public account_id: boolean;
+  @IsString()
+  public account_id: string;
 }
 
 class UpdateAccountDTO extends CreateAccountDTO {
   @IsBoolean()
-  public is_active: boolean | undefined;
+  public is_active: boolean | null;
 }
-
 class LoginAccountDTO {
   @IsString()
   public username: string;

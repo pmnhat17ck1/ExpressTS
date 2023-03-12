@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
 
-import db from '@/models';
 import { response } from '@/utils/response.util';
+import { AddressI } from '@/interfaces/address.interface';
+import {
+  CreateAddressDTO,
+  UpdateAddressDTO,
+  DeleteAddressDTO,
+} from '@/dtos/address.dto';
 
+import db from '@/models';
 const { Address } = db;
 //products/:id/ratings
 class AddressController {
@@ -11,7 +17,7 @@ class AddressController {
     res: Response
   ): Promise<void> => {
     try {
-      const address = await Address.findAll({
+      const address: AddressI = await Address.findAll({
         where: { account_id: req.account.id },
       });
       if (!address) {
@@ -27,7 +33,8 @@ class AddressController {
     res: Response
   ): Promise<void> => {
     try {
-      const { street, city, state, zipCode, isDefault } = req.body;
+      const { street, city, state, zipCode, isDefault }: CreateAddressDTO =
+        req.body;
 
       const address = await Address.create({
         street,
@@ -47,7 +54,14 @@ class AddressController {
     res: Response
   ): Promise<void> => {
     try {
-      const { street, city, state, zipCode, isDefault, address_id } = req.body;
+      const {
+        street,
+        city,
+        state,
+        zipCode,
+        isDefault,
+        address_id,
+      }: UpdateAddressDTO = req.body;
 
       const address = await Address.update(
         {
@@ -73,7 +87,7 @@ class AddressController {
     res: Response
   ): Promise<void> => {
     try {
-      const { address_id } = req.body;
+      const { address_id }: DeleteAddressDTO = req.body;
       const addressFound = await Address.findByPk(address_id);
       if (!addressFound) {
         return response(res, 404);
