@@ -1,11 +1,12 @@
 import {
   IsString,
+  IsBoolean,
   IsEmail,
   IsPhoneNumber,
   IsStrongPassword,
 } from 'class-validator';
 
-export class CreateAccountDTO {
+class CreateAccountDTO {
   @IsEmail()
   public email: string;
 
@@ -18,9 +19,16 @@ export class CreateAccountDTO {
   @IsString()
   @IsPhoneNumber('VN')
   public phone: number;
+
+  public account_id: boolean;
 }
 
-export class LoginAccountDTO {
+class UpdateAccountDTO extends CreateAccountDTO {
+  @IsBoolean()
+  public is_active: boolean | undefined;
+}
+
+class LoginAccountDTO {
   @IsString()
   public username: string;
 
@@ -28,3 +36,4 @@ export class LoginAccountDTO {
   @IsStrongPassword({ minLength: 6 })
   public password: string;
 }
+export { CreateAccountDTO, UpdateAccountDTO, LoginAccountDTO };

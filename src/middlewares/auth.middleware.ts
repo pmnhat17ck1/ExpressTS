@@ -16,7 +16,7 @@ export const authenticate = async (
     const Authorization =
       req.cookies['Authorization'] ||
       (req.header('Authorization')
-        ? req.header('Authorization').split('Bearer ')[1]
+        ? req.header('Authorization').split(' ')[1]
         : null);
     if (Authorization) {
       payload = verifyToken(Authorization, process.env.ACCESS_TOKEN_SECRET);
@@ -26,14 +26,14 @@ export const authenticate = async (
         req.account_id = foundAccount?.id;
         next();
       } else {
-        next(response(res, 401));
+        return response(res, 401);
       }
     } else {
-      next(response(res, 404));
+      return response(res, 401);
     }
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
-      next(response(res, 422, 'invalid_token'));
+      return response(res, 422, 'invalid_token');
     }
   }
 };

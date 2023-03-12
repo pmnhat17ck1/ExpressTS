@@ -20,7 +20,15 @@ export class Profile
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
-    Profile.belongsTo(models.Account);
+    Profile.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
+    Profile.belongsTo(models.Address, {
+      foreignKey: {
+        allowNull: true,
+      },
+    });
+    Profile.hasMany(models.Image);
   };
   public static hook = () => {};
 }
@@ -35,11 +43,12 @@ module.exports = function (sequelize: Sequelize): typeof Profile {
       },
       fullName: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
       },
       dateOfBirth: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: DataTypes.NOW,
       },
       avatar: {
         type: DataTypes.STRING(255),

@@ -20,7 +20,9 @@ export class Token
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
-    Token.belongsTo(models.Account);
+    Token.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

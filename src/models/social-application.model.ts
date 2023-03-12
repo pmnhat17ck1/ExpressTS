@@ -21,6 +21,7 @@ export class SocialApplication
   public static associate = (models: any): any => {
     SocialApplication.belongsToMany(models.Account, {
       through: models.SocialAccount,
+      onDelete: 'CASCADE',
       foreignKey: 'provider_id',
     });
   };

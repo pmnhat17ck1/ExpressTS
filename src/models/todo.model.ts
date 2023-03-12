@@ -18,7 +18,9 @@ export class Todo extends Model<TodoI, TodoCreationAttributes> implements Todo {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Todo.belongsTo(models.Account);
+    Todo.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

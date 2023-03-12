@@ -16,8 +16,11 @@ export class Order extends Model implements Order {
     Order.belongsToMany(models.Product, {
       through: models.OrderDetail,
       foreignKey: 'order_id',
+      onDelete: 'CASCADE',
     });
-    Order.belongsTo(models.Account);
+    Order.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

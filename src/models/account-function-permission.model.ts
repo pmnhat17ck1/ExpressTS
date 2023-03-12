@@ -7,7 +7,9 @@ export class AccountFunctionPermission
   public id!: number;
 
   public static associate = (models: any): any => {
-    AccountFunctionPermission.belongsTo(models.Account);
+    AccountFunctionPermission.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
 
   public static hook = () => {};

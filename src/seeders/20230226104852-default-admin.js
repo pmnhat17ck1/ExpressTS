@@ -6,6 +6,7 @@ const uuidv4 = require('uuid').v4;
 module.exports = {
   async up(queryInterface) {
     let idAdmin = uuidv4();
+    let idProfile = uuidv4();
     await queryInterface.bulkInsert('accounts', [
       {
         id: idAdmin,
@@ -33,10 +34,20 @@ module.exports = {
         updated_at: new Date(),
       },
     ]);
+    await queryInterface.bulkInsert('profiles', [
+      {
+        id: idProfile,
+        account_id: idAdmin,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    ]);
   },
 
   async down(queryInterface) {
     await queryInterface.bulkDelete('accounts', null, {});
     await queryInterface.bulkDelete('tokens', null, {});
+    await queryInterface.bulkDelete('wallets', null, {});
+    await queryInterface.bulkDelete('profiles', null, {});
   },
 };

@@ -8,7 +8,9 @@ export class OrderDetail extends Model implements OrderDetail {
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
-    OrderDetail.belongsTo(models.Order);
+    OrderDetail.belongsTo(models.Order, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

@@ -8,7 +8,9 @@ export class Notification extends Model implements Notification {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Notification.belongsTo(models.Account);
+    Notification.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

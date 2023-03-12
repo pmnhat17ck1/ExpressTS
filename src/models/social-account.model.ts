@@ -37,7 +37,7 @@ module.exports = function (sequelize: Sequelize): typeof SocialAccount {
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'accounts',
+          model: 'Account',
           key: 'id',
         },
       },

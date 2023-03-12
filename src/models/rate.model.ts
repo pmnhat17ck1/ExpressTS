@@ -5,7 +5,9 @@ export class Rate extends Model implements Rate {
   public value!: string;
   public comment!: number;
   public static associate = (models: any): any => {
-    Rate.belongsTo(models.Product);
+    Rate.belongsTo(models.Product, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

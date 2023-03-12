@@ -7,8 +7,10 @@ export class Like extends Model implements Like {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Like.belongsTo(models.Product);
-    Like.belongsTo(models.Account);
+    Like.belongsTo(models.Product, { onDelete: 'CASCADE' });
+    Like.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

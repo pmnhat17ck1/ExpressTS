@@ -9,7 +9,9 @@ export class Transaction extends Model implements Transaction {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Transaction.belongsTo(models.Account);
+    Transaction.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
     Transaction.belongsTo(models.PaymentMethod);
   };
   public static hook = () => {};

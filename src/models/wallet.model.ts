@@ -7,7 +7,9 @@ export class Wallet extends Model implements Wallet {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Wallet.belongsTo(models.Account);
+    Wallet.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
     Wallet.hasMany(models.Card);
   };
   public static hook = () => {};

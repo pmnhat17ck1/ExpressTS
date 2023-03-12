@@ -12,7 +12,7 @@ class TodoController {
       response(res, 500);
     }
   };
-  public deleteAllTodoByAccountId = async (
+  public deleteAllTodoByAccount = async (
     req: any,
     res: Response
   ): Promise<void> => {
@@ -23,7 +23,7 @@ class TodoController {
       response(res, 500);
     }
   };
-  public getAllTodoByAccountId = async (
+  public getAllTodoByAccount = async (
     req: any,
     res: Response
   ): Promise<void> => {
@@ -36,9 +36,18 @@ class TodoController {
       response(res, 500);
     }
   };
-  public deleteByIds = async (req: Request, res: Response): Promise<void> => {
+  public deleteTodoByIds = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
     try {
-      await Todo.destroy({ where: {} });
+      const { listTodoIds } = req.body;
+
+      await Todo.destroy({
+        where: {
+          id: listTodoIds,
+        },
+      });
       response(res, 200);
     } catch (error) {
       response(res, 500);

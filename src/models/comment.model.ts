@@ -7,8 +7,12 @@ export class Comment extends Model implements Comment {
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Comment.belongsTo(models.Account);
-    Comment.belongsTo(models.Product);
+    Comment.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
+    Comment.belongsTo(models.Product, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = () => {};
 }

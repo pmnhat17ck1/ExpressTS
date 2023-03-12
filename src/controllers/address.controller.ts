@@ -5,7 +5,7 @@ import { response } from '@/utils/index';
 const { Address } = db;
 //products/:id/ratings
 class AddressController {
-  public getAllAddressOfAccount = async (
+  public getAllAddressByAccount = async (
     req: any,
     res: Response
   ): Promise<void> => {
@@ -21,7 +21,7 @@ class AddressController {
       response.response(res, 500);
     }
   };
-  public createAddressOfAccount = async (
+  public createAddressByAccount = async (
     req: any,
     res: Response
   ): Promise<void> => {
@@ -41,7 +41,7 @@ class AddressController {
       response.response(res, 500);
     }
   };
-  public updateAddressOfAccount = async (
+  public updateAddressByAccount = async (
     req: any,
     res: Response
   ): Promise<void> => {
@@ -67,7 +67,7 @@ class AddressController {
       response.response(res, 500);
     }
   };
-  public deleteAddressOfAccount = async (
+  public deleteAddressByAccount = async (
     req: Request,
     res: Response
   ): Promise<void> => {

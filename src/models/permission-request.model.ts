@@ -4,7 +4,7 @@ export class PermissionRequest extends Model implements PermissionRequest {
   public id!: number;
   public name!: string;
   public static associate = (models: any): any => {
-    PermissionRequest.belongsTo(models.Account);
+    PermissionRequest.belongsTo(models.Account, { onDelete: 'CASCADE' });
     PermissionRequest.belongsTo(models.Function);
     PermissionRequest.belongsTo(models.Permission);
   };

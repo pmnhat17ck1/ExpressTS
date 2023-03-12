@@ -17,7 +17,15 @@ export class Image
   public created_at!: Date;
   public updated_at!: Date;
   public static associate = (models: any): any => {
-    Image.belongsTo(models.Account);
+    Image.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
+    Image.belongsTo(models.Profile, {
+      onDelete: 'CASCADE',
+      foreignKey: {
+        allowNull: true,
+      },
+    });
   };
   public static hook = () => {};
 }

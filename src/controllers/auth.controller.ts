@@ -8,7 +8,7 @@ import { isEmailOrPhone } from '@/utils/util';
 import { jwt, validator, response } from '@/utils/index';
 
 import db from '@/models';
-const { Account, Token } = db;
+const { Account, Token, Country, Role } = db;
 
 class AuthController {
   public logIn = async (req: Request, res: Response): Promise<void> => {
@@ -46,8 +46,27 @@ class AuthController {
             { phone: input.phone },
           ],
         },
+        include: [
+          {
+            model: Country,
+            as: 'country',
+          },
+          {
+            model: Role,
+            as: 'role',
+          },
+        ],
         attributes: {
-          exclude: ['created_at', 'updated_at'],
+          exclude: [
+            'countryId',
+            'roleId',
+            'CountryId',
+            'RoleId',
+            'created_at',
+            'updated_at',
+            'createdAt',
+            'updatedAt',
+          ],
         },
       });
 
@@ -91,19 +110,21 @@ class AuthController {
         path: '/',
         sameSite: 'strict',
       });
-      response.response(res, 203, 'login_success');
+      response.response(res, 203, { message: 'login_success', account });
     } catch (error) {
       response.response(res, 500, error);
     }
   };
   public signUp = async (req: Request, res: Response): Promise<void> => {
-    const { email, username, phone, password } = req.body;
     try {
+      const { email, username, phone, password } = req.body;
+
       const newAccount = await Account.create({
         username,
         email,
         phone,
         password,
+        is_active: false,
         role_id: 1,
         country_id: 1,
       });

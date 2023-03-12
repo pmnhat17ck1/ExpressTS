@@ -11,7 +11,9 @@ export class Address extends Model implements Address {
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
   public static associate = (models: any): any => {
-    Address.belongsTo(models.Account);
+    Address.belongsTo(models.Account, {
+      onDelete: 'CASCADE',
+    });
   };
   public static hook = (): any => {};
 }

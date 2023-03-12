@@ -12,19 +12,15 @@ export class Product extends Model implements Product {
   public static associate = (models: any): any => {
     Product.hasMany(models.Like, {
       foreignKey: 'product_id',
-      onDelete: 'CASCADE',
     });
     Product.hasMany(models.Comment, {
       foreignKey: 'product_id',
-      onDelete: 'CASCADE',
     });
     Product.hasMany(models.Rate, {
       foreignKey: 'product_id',
-      onDelete: 'CASCADE',
     });
     Product.belongsToMany(models.Order, {
       through: models.OrderDetail,
-      onDelete: 'CASCADE',
       foreignKey: 'product_id',
     });
     Product.belongsToMany(models.Category, {
