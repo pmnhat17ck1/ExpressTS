@@ -8,11 +8,11 @@ export class PostgresService {
   public client: any;
   public sequelize: any;
   public Sequelize: any = Sequelize;
-  public host = config.DB_POSTGRES_HOST;
-  public port = config.DB_POSTGRES_PORT;
-  public database = config.DB_POSTGRES_DATABASE;
-  public username = config.DB_POSTGRES_USERNAME;
-  public password = config.DB_POSTGRES_PASSWORD;
+  public host = config.POSTGRES_HOST;
+  public port = config.POSTGRES_PORT;
+  public database = config.POSTGRES_DB;
+  public username = config.POSTGRES_USER;
+  public password = config.POSTGRES_PASSWORD;
   private static instance: PostgresService;
   constructor() {
     this.initPg();

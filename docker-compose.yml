@@ -24,12 +24,12 @@ services:
       - /app/node_modules
     restart: 'unless-stopped'
     environment:
-      REDIS_URL: redis://localhost:6379
-      DB_POSTGRES_USERNAME: postgres
-      DB_POSTGRES_PORT: 5432
-      DB_POSTGRES_DATABASE: postgres
-      DB_POSTGRES_PASSWORD: 123456
-      DB_POSTGRES_HOST: localhost
+      REDIS_URL: redis://redis:6379
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: postgres
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
     networks:
       - backend
     links:
@@ -64,3 +64,4 @@ networks:
 volumes:
   data:
     driver: local
+  
