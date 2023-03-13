@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
-
+import crypto from 'crypto';
+import { isString } from './util';
 export const apiLimiter = (
   time = 60 * 1000,
   maxReq = 60,
   msg = {
     success: false,
-    message: 'Fail!',
-    data: 'Too many requests, please try again after a few minutes.',
+    message: 'Too many requests, please try again after a few minutes!',
   }
 ): any =>
   rateLimit({
@@ -35,7 +35,54 @@ export const getAppVersion = (version) => {
   return 'v' + appVersion;
 };
 
+export const randomCode = (randombytes = 3, type: any = 'hex') =>
+  crypto.randomBytes(randombytes).toString(type).toUpperCase();
+
+export const expiredTime = (time) => {
+  const now = new Date();
+  let expirationTime;
+  if (!isString(time)) {
+    return now.getTime() + time;
+  }
+  const [value, unit] = time.match(/[a-zA-Z]+|[0-9]+/g);
+
+  switch (unit) {
+    case 's':
+      expirationTime = now.getTime() + value * 1000;
+      break;
+    case 'm':
+      expirationTime = now.getTime() + value * 60 * 1000;
+      break;
+    case 'h':
+      expirationTime = now.getTime() + value * 60 * 60 * 1000;
+      break;
+    case 'd':
+      expirationTime = now.getTime() + value * 24 * 60 * 60 * 1000;
+      break;
+    case 'M':
+      expirationTime = new Date(
+        now.getFullYear(),
+        now.getMonth() + value,
+        now.getDate()
+      ).getTime();
+      break;
+    case 'y':
+      expirationTime = new Date(
+        now.getFullYear() + value,
+        now.getMonth(),
+        now.getDate()
+      ).getTime();
+      break;
+    default:
+      throw new Error(`Invalid unit: ${unit}`);
+  }
+
+  return new Date(expirationTime);
+};
+
 export default {
   apiLimiter,
   decodedToken,
+  getAppVersion,
+  randomCode,
 };

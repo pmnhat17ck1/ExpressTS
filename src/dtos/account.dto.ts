@@ -19,9 +19,6 @@ class CreateAccountDTO {
   @IsString()
   @IsPhoneNumber('VN')
   public phone: number;
-
-  @IsString()
-  public account_id: string;
 }
 
 class UpdateAccountDTO extends CreateAccountDTO {

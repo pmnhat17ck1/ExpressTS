@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer';
 
 class EmailService {
   public transporter: any;
+  private static instance: EmailService;
+
   constructor() {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -11,8 +13,14 @@ class EmailService {
       },
     });
   }
+  public static getInstance(): EmailService {
+    if (!EmailService.instance) {
+      EmailService.instance = new EmailService();
+    }
+    return EmailService.instance;
+  }
 
-  async sendEmail(recipient, subject, message) {
+  public async sendEmail(recipient, subject, message) {
     try {
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
@@ -28,7 +36,7 @@ class EmailService {
     }
   }
   // Hàm gửi email với attachment
-  sendMailWithAttachment = async (
+  public sendMailWithAttachment = async (
     to: any,
     subject: any,
     body: any,
@@ -50,7 +58,7 @@ class EmailService {
   };
 
   // Hàm gửi email đơn giản chỉ có text
-  sendTextMail = async (to: any, subject: any, text: any) => {
+  public sendTextMail = async (to: any, subject: any, text: any) => {
     const mailOptions = {
       from: process.env.EMAIL_USERNAME,
       to,

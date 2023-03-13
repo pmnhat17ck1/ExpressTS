@@ -1,6 +1,6 @@
 import { Router } from 'express';
 // import validationMiddleware from '@middlewares/validation.middleware';
-import { authenticate, authenticateAdmin } from '@middlewares/auth.middleware';
+import { authenticateAdmin } from '@middlewares/auth.middleware';
 // import { CreateAccountDTO, LoginAccountDTO } from '@dtos/account.dto';
 import { Routes } from '@interfaces/routes.interface';
 import { AccountController } from '@controllers/account.controller';
@@ -21,12 +21,12 @@ class AccountRoute implements Routes {
     );
     this.router.get(
       `${this.path}:account_id`,
-      authenticate,
+      authenticateAdmin,
       this.accountController.getAccountById
     );
     this.router.put(
       `${this.path}:account_id`,
-      authenticate,
+      authenticateAdmin,
       this.accountController.updateAccount
     );
     this.router.delete(

@@ -28,7 +28,6 @@ class App {
     this.version = config.APP_VERSION || 'default';
     this.port = config.PORT || 8000;
     this.routes = new GetRoutes();
-    this.connectToDatabase();
     this.syncDatabase();
     this.syncAssociations();
     this.initializeMiddlewares();
@@ -50,21 +49,12 @@ class App {
     return this.app;
   }
 
-  private connectToDatabase() {
-    DB.sequelize
-      .authenticate()
-      .then(() => {
-        console.log('Database connected...');
-      })
-      .catch((err: any) => console.log(`Connect database error: ${err}`));
-  }
-
   private syncAssociations() {
     DB.associations();
   }
 
   private syncDatabase() {
-    DB.sequelize.sync({ force: true });
+    DB.sync({ force: true });
   }
 
   private initializeMiddlewares() {
@@ -79,8 +69,6 @@ class App {
     this.app.use(helmet());
     this.app.use(
       compression({
-        level: 6,
-        threshold: 100 * 1000,
         filter: (req: any, res: any) => {
           if (req.headers['x-no-compress']) {
             return false;

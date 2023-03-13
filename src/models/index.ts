@@ -1,39 +1,11 @@
-import Sequelize from 'sequelize';
 import fs from 'fs';
 import path from 'path';
 
-import config from '@config';
+import { PostgresService } from '@/services/systems/postgres.service';
 import { logger } from '@utils/logger';
-
-const sequelize = new Sequelize.Sequelize(
-  config.DB_POSTGRES_DATABASE,
-  config.DB_POSTGRES_USERNAME,
-  config.DB_POSTGRES_PASSWORD,
-  {
-    dialect: 'postgres',
-    host: config.DB_POSTGRES_HOST,
-    port: Number(config.DB_POSTGRES_PORT),
-    timezone: '+07:00',
-    define: {
-      charset: 'utf8mb4',
-      collate: 'utf8mb4_general_ci',
-      underscored: true,
-      freezeTableName: true,
-    },
-    pool: {
-      min: 0,
-      max: 5,
-    },
-    logQueryParameters: config.NODE_ENV === 'development',
-    logging: (query, time) => {
-      logger.info(time + 'ms' + ' ' + query);
-    },
-    benchmark: true,
-  }
-);
-
 const models: any = {};
-
+const postgres = PostgresService.getInstance();
+const { sequelize, Sequelize } = postgres;
 const basename = path.basename(__filename);
 try {
   fs.readdirSync(__dirname)
@@ -61,9 +33,14 @@ const associations = () => {
   });
 };
 
+const sync = (params) => {
+  sequelize.sync(params);
+};
+
 const DB = {
   ...models,
   associations,
+  sync,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

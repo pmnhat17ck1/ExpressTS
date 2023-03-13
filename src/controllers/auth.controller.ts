@@ -7,9 +7,10 @@ import { AccountI } from '@interfaces/account.interface';
 import { isEmailOrPhone } from '@/utils/util';
 import { jwt, validator } from '@/utils/index';
 import { response } from '@/utils/response.util';
-
+import { randomCode, expiredTime } from '@/utils/common.util';
+import { EmailService } from '@/services/systems';
 import db from '@/models';
-const { Account, Token, Country, Role } = db;
+const { Account, Token, Country, Role, ForgotPassword } = db;
 
 class AuthController {
   public logIn = async (req: Request, res: Response): Promise<void> => {
@@ -116,17 +117,18 @@ class AuthController {
       response(res, 500, error);
     }
   };
+
   public signUp = async (req: Request, res: Response): Promise<void> => {
     try {
       const { email, username, phone, password }: CreateAccountDTO = req.body;
 
-      const newAccount = await Account.create({
+      const newAccount: AccountI = await Account.create({
         username,
         email,
         phone,
         password,
         is_active: false,
-        role_id: 1,
+        role_id: 2,
         country_id: 1,
       });
 
@@ -161,10 +163,56 @@ class AuthController {
       );
     }
   };
+
   public logOut = async (req: Request, res: Response): Promise<void> => {
     res.setHeader('Authorization', '');
     res.clearCookie('refreshToken');
     response(res, 200, 'logout_success');
+  };
+
+  public ForgotPassword = async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const account = await Account.findOne({ where: { email } });
+    if (!account) {
+      return response(res, 404);
+    }
+    const token = randomCode();
+    const expires = expiredTime('5m');
+    await ForgotPassword.create({
+      email,
+      token,
+      expires,
+      account_id: account.id,
+    });
+    await EmailService.getInstance().sendEmail(
+      email,
+      'forgot password',
+      `The code for forgot password: ${token}`
+    );
+    response(res, 200, 'email_sent_successfully');
+  };
+  public ResetPassword = async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+    const forgotPassword = await ForgotPassword.findOne({ where: { token } });
+    if (!forgotPassword) {
+      return response(res, 404, 'invalid_token');
+    }
+    if (new Date() > forgotPassword.expires) {
+      await forgotPassword.destroy();
+      return response(res, 404, 'token_has_expired');
+    }
+    const account = await Account.findOne({
+      where: { email: forgotPassword.email },
+    });
+
+    if (!account) {
+      await forgotPassword.destroy();
+      return response(res, 404, 'user_not_found');
+    }
+
+    await account.update({ password: newPassword });
+    await forgotPassword.destroy();
+    response(res, 200, 'password_updated_successfully');
   };
 }
 

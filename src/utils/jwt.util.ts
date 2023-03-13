@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 
 export const generateAccessToken = (object = {}, exp = '30d'): any => {
   const accessKey = process.env.ACCESS_TOKEN_SECRET;
@@ -23,12 +22,6 @@ export const generateRefreshToken = (object = {}, exp = '60s'): any => {
   );
 };
 
-export const randomHexCode = (randombytes: any, type: any) =>
-  crypto
-    .randomBytes(randombytes || 3)
-    .toString(type || 'hex')
-    .toUpperCase();
-
 export const verifyToken = (
   token: any,
   key = process.env.ACCESS_TOKEN_SECRET
@@ -46,7 +39,6 @@ export const checkExpiredToken = (exp = 0): any => Date.now() >= exp * 1000;
 export default {
   generateAccessToken,
   generateRefreshToken,
-  randomHexCode,
   verifyToken,
   checkExpiredToken,
 };

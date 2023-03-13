@@ -23,7 +23,7 @@ class AccountController {
   // guest
   public getAccountById = async (req: any, res: Response): Promise<void> => {
     try {
-      const account_id: CreateAccountDTO = req.params.account_id;
+      const account_id = req.params.account_id;
       const account: AccountI = await Account.findByPk(account_id, {
         include: [
           {
@@ -65,7 +65,7 @@ class AccountController {
         email,
         phone,
         password,
-        role_id: 1,
+        role_id: 2,
         country_id: 1,
       });
 

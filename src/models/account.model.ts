@@ -29,7 +29,9 @@ export class Account
     Account.hasOne(models.Token, {
       foreignKey: 'account_id',
     });
-
+    Account.hasOne(models.ForgotPassword, {
+      foreignKey: 'account_id',
+    });
     Account.hasMany(models.Image, {
       foreignKey: 'account_id',
     });
