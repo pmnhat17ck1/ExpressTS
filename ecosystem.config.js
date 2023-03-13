@@ -4,11 +4,11 @@
  *  production mode :: pm2 start ecosystem.config.js --only prod
  *  development mode :: pm2 start ecosystem.config.js --only dev
  */
- module.exports = {
+module.exports = {
   apps: [
     {
       name: 'prod', // pm2 start App name
-      script: 'dist/server.js',
+      script: 'build/index.js',
       exec_mode: 'cluster', // 'cluster' or 'fork'
       instance_var: 'INSTANCE_ID', // instance variable
       instances: 2, // pm2 instance count
@@ -19,8 +19,9 @@
       merge_logs: true, // if true, stdout and stderr will be merged and sent to pm2 log
       output: './logs/access.log', // pm2 log file
       error: './logs/error.log', // pm2 error log file
-      env: { // environment variable
-        PORT: 3000,
+      env: {
+        // environment variable
+        PORT: 8000,
         NODE_ENV: 'production',
       },
     },
@@ -38,20 +39,22 @@
       merge_logs: true, // if true, stdout and stderr will be merged and sent to pm2 log
       output: './logs/access.log', // pm2 log file
       error: './logs/error.log', // pm2 error log file
-      env: { // environment variable
-        PORT: 3000,
+      env: {
+        // environment variable
+        PORT: 8000,
         NODE_ENV: 'development',
       },
     },
   ],
   deploy: {
     production: {
-      user: 'user',
+      user: 'pmnhat17ck1',
       host: '0.0.0.0',
       ref: 'origin/master',
-      repo: 'git@github.com:repo.git',
-      path: 'dist/server.js',
-      'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.js --only prod',
+      repo: 'git@github.com:pmnhat17ck1/ExpressTS.git',
+      path: 'build/index.js',
+      'post-deploy':
+        'npm install && npm run build && pm2 reload ecosystem.config.js --only prod',
     },
   },
 };

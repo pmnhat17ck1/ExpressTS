@@ -1,5 +1,5 @@
 #!/bin/bash
 
-dockerize -wait tcp://mysql:3306 -timeout 20s
+dockerize -wait tcp://postgresql:5432 -wait tcp://redis:6379 -timeout 20s
 
-echo "Start Wait Mysql"
+echo "Start Wait Postgresql and Redis"

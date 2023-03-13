@@ -2,7 +2,7 @@
 # ex) production-stage: make build APP_NAME=<APP_NAME>
 # ex) development-stage: make build-dev APP_NAME=<APP_NAME>
 
-APP_NAME = typescript-express
+APP_NAME = XuanMaiApi
 APP_NAME := $(APP_NAME)
 
 .PHONY: build
@@ -24,6 +24,6 @@ clean:
 
 # Run the container image
 run:
-	docker run -d -it -p 3000:3000 ${APP_NAME}
+	docker run -d -it -p 8000:8000 ${APP_NAME}
 
 all: build

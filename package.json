@@ -1,5 +1,5 @@
 {
-  "name": "ExpressTS",
+  "name": "XuanMaiApi",
   "version": "1.0.0",
   "description": "A Node.js app using Express, Sequelize, TypeScript, and PostgreSQL",
   "author": "Nhat",
@@ -11,7 +11,7 @@
     "clean": "rm -rf build node_modules yarn-error.log yarn.lock",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
     "dev": "set NODE_ENV=development && nodemon",
-    "prod": "yarn build && set NODE_ENV=production && node build/index.js",
+    "prod": "npm run build && set NODE_ENV=production && node build/index.js",
     "build": "swc src -d build --source-maps --copy-files",
     "build:tsc": "tsc && tsc-alias",
     "start": "node build/index.js",
@@ -30,9 +30,11 @@
     "rollback": "sequelize-cli db:seed:undo",
     "rollback:all": "sequelize-cli db:seed:undo:all",
     "rollback:file": "sequelize-cli db:migrate:undo --name",
-    "db:init": "yarn start && yarn migrate && yarn seed",
+    "db:init": "npm run start && npm run migrate && npm run seed",
     "db:drop": "sequelize-cli db:drop",
-    "db:create": "sequelize-cli db:create"
+    "db:create": "sequelize-cli db:create",
+    "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
+    "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
   "keywords": [
     "node",
@@ -48,7 +50,6 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "depcheck": "^1.4.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-rate-limit": "^6.7.0",
