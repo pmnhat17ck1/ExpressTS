@@ -8,16 +8,16 @@
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "clean": "rm -rf build node_modules yarn-error.log yarn.lock",
-    "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
-    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
+    "prettier": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{js,ts,json,md}\"",
     "dev": "set NODE_ENV=development && nodemon",
     "prod": "npm run build && set NODE_ENV=production && node build/index.js",
     "build": "swc src -d build --source-maps --copy-files",
     "build:tsc": "tsc && tsc-alias",
     "start": "node build/index.js",
     "test": "jest --forceExit --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "eslint --ignore-path .gitignore --ext .ts src/ --fix",
+    "lint:check": "eslint --ignore-path .gitignore --ext src/**/*.{js,ts,json,md}",
+    "lint": "eslint --ignore-path .gitignore --ext src/**/*.{js,ts,json,md} --fix",
     "migrate": "sequelize-cli db:migrate",
     "migrate:make": "sequelize-cli migration:generate --name",
     "migrate:status": "sequelize-cli db:migrate:status",
@@ -39,7 +39,7 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
         "npm run lint",
-        "npm run prettier:check"
+        "npm run prettier"
     ]
   },
   "husky": {
