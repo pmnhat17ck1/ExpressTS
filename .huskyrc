@@ -3,12 +3,12 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "**/*.js": [
+    "src/**/*.js": [
       "eslint --fix",
       "prettier --write",
       "git add"
     ],
-    "**/*.ts": [
+    "src/**/*.ts": [
       "eslint --fix",
       "prettier --write",
       "git add"
