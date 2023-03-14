@@ -9,8 +9,9 @@
       "git add"
     ],
     "**/*.ts": [
-      "eslint --ignore-path .gitignore --ext .ts src/ --fix",
-      "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\""
+      "eslint --fix",
+      "prettier --write",
+      "git add"
     ]
   }
 }
