@@ -3,7 +3,7 @@ module.exports = {
     username: 'postgres',
     password: '123456',
     database: 'postgres',
-    host: '127.0.0.1',
+    host: 'postgres',
     port: 5432,
     dialect: 'postgres',
     dialectOptions: {
@@ -14,7 +14,7 @@ module.exports = {
     username: 'postgres',
     password: '123456',
     database: 'postgres',
-    host: '127.0.0.1',
+    host: 'postgres',
     dialect: 'postgres',
     dialectOptions: {
       bigNumberStrings: true,
