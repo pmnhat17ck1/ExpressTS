@@ -5,6 +5,7 @@
   "author": "Nhat",
   "license": "MIT",
   "scripts": {
+    "lint-staged": "lint-staged",
     "clean": "rm -rf build node_modules yarn-error.log yarn.lock",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,md}\"",
     "dev": "set NODE_ENV=development && nodemon",
