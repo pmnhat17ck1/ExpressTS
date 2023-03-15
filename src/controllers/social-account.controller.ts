@@ -1,111 +1,110 @@
-// import { Op } from "sequelize";
+import { Request, Response } from 'express';
+import { Op } from 'sequelize';
 
-// import { Request, Response } from "express";
-// import db from "@models/index";
-// const { Account, SocialAccount } = db;
+import db from '@models/index';
+const { Account, SocialAccount, Token } = db;
 
-// const socialLogin = async (req: Request, res: Response) => {
-//   try {
-//     const { provider, socialId, email, phoneNumber } = req.body;
-//     // Xác thực user bằng SocialAccount và trả về dữ liệu tài khoản
-//     const socialAccount = await SocialAccount.findOne({
-//       where: { provider, socialId },
-//     });
-//     if (!socialAccount) {
-//       return res.status(400).json({ message: "Social account no_found" });
-//     }
-//     const account = await Account.findOne({
-//       where: { [Op.or]: [{ email }, { phoneNumber }] },
-//     });
-//     if (!account) {
-//       // Nếu chưa có tài khoản bình thường, tạo mới và liên kết với SocialAccount
-//       const newAccount = await Account.create({
-//         email,
-//         phoneNumber,
-//         password: "",
-//         isActive: true,
-//         role: "user",
-//       });
-//       await socialAccount.setAccount(newAccount);
-//       const accessToken = generateAccessToken(newAccount);
-//       const refreshToken = generateRefreshToken(newAccount);
-//       return res.json({ accessToken, refreshToken, account: newAccount });
-//     } else {
-//       // Nếu có tài khoản bình thường, liên kết với SocialAccount
-//       await socialAccount.setAccount(account);
-//       const accessToken = generateAccessToken(account);
-//       const refreshToken = generateRefreshToken(account);
-//       return res.json({ accessToken, refreshToken, account });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
+import { response } from '@/utils/response.util';
+import { jwt } from '@/utils';
+class SocialAccountController {
+  constructor(parameters) {}
+  socialLogin = async (req: Request, res: Response) => {
+    try {
+      const { provider, socialId, email, phoneNumber } = req.body;
+      // Xác thực user bằng SocialAccount và trả về dữ liệu tài khoản
+      const socialAccount = await SocialAccount.findOne({
+        where: { provider, socialId },
+      });
+      if (!socialAccount) {
+        return response(res, 400);
+      }
+      const account = await Account.findOne({
+        where: { [Op.or]: [{ email }, { phoneNumber }] },
+      });
+      let accessToken, refreshToken;
+      if (!account) {
+        // Nếu chưa có tài khoản bình thường, tạo mới và liên kết với SocialAccount
+        const newAccount = await Account.create({
+          username: phoneNumber,
+          email,
+          phoneNumber,
+          password: '',
+          isActive: true,
+          role_id: 2,
+          country_id: 1,
+        });
+        await socialAccount.setAccount(newAccount);
+        accessToken = jwt.generateAccessToken({ account_id: newAccount.id });
+        refreshToken = jwt.generateRefreshToken({ account_id: newAccount.id });
+        await Token.create({
+          account_id: newAccount.id,
+          accessToken,
+          refreshToken,
+          type: 'social-account',
+        });
+      }
+      await socialAccount.setAccount(account);
+      accessToken = jwt.generateAccessToken({ account_id: account.id });
+      refreshToken = jwt.generateRefreshToken({ account_id: account.id });
+      let tokenAccess;
+      const tokenAccount = await Token.findOne({
+        where: {
+          account_id: account.id,
+        },
+      });
+      tokenAccess = tokenAccount?.accessToken;
+      if (!tokenAccess) {
+        tokenAccount.update({
+          accessToken: accessToken,
+        });
+        tokenAccess = accessToken;
+      }
+      const payload = jwt.verifyToken(tokenAccess);
+      if (jwt.checkExpiredToken(payload.exp)) {
+        tokenAccount.update({
+          accessToken: accessToken,
+        });
+        tokenAccess = refreshToken;
+      }
+      tokenAccount.save();
+      return response(res, 200, account);
+    } catch (error) {
+      return response(res, 500);
+    }
+  };
+  linkSocial = async (req: any, res: Response) => {
+    try {
+      const { provider, social_id } = req.body;
+      if (!provider || !social_id) {
+        return response(res, 400, 'Provider and socialId are required');
+      }
+      const linkedSocialAccount = await SocialAccount.findOne({
+        where: { provider, social_id, account_id: req.account.id },
+      });
+      if (linkedSocialAccount) {
+        return response(res, 409, 'Social account already linked');
+      }
+    await SocialAccount.create({
+        provider,
+        social_id,
+        account_id: req.account.id,
+      });
+      return response(res, 200, 'Social account linked successfully');
+    } catch (error) {
+      return response(res, 500);
+    }
+  };
+  socialAccounts = async (req: any, res: Response) => {
+    try {
+      const socialAccounts = await SocialAccount.findAll({where: {account_id: req.account.id}});
+      return response(res, 200, socialAccounts);
+    } catch (err) {;
+      return response(res, 500);
+    }
+  };
+}
 
-// const linkSocial = async (req: Request, res: Response) => {
-//   try {
-//     const user = req.user;
-//     const { provider, socialId } = req.body;
 
-//     if (!provider || !socialId) {
-//       return res
-//         .status(400)
-//         .send({ message: "Provider and socialId are required" });
-//     }
-
-//     const socialAccount = await SocialAccount.findOne({
-//       where: { provider, socialId },
-//     });
-//     if (!socialAccount) {
-//       return res.status(404).send({ message: "Social account no_found" });
-//     }
-
-//     const existingUser = await User.findOne({
-//       where: { id: socialAccount.account_id },
-//     });
-//     if (!existingUser) {
-//       return res.status(404).send({ message: "User no_found" });
-//     }
-
-//     if (existingUser.id !== user.id) {
-//       return res
-//         .status(403)
-//         .send({
-//           message: "You can only link social account to your own account",
-//         });
-//     }
-
-//     const linkedSocialAccount = await SocialAccount.findOne({
-//       where: { provider, account_id: user.id },
-//     });
-//     if (linkedSocialAccount) {
-//       return res.status(409).send({ message: "Social account already linked" });
-//     }
-
-//     await socialAccount.update({ account_id: user.id });
-
-//     return res
-//       .status(200)
-//       .send({ message: "Social account linked successfully" });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).send({ message: "Internal server error" });
-//   }
-// };
-
-// const socialAccounts = async (req: Request, res: Response) => {
-//   try {
-//     const socialAccounts = await SocialAccount.findAll();
-//     res.json(socialAccounts);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Internal server error");
-//   }
-// };
-
-// export default {
-//   socialLogin,
-//   linkSocial,
-//   socialAccounts,
-// };
+export default {
+  SocialAccountController,
+};
