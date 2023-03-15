@@ -1,6 +1,6 @@
 export interface SocialApplicationI {
-  id: number;
   name: string;
-  clientId: string;
-  secretKey: string;
+  client_id: string;
+  client_secret: string;
+  callback_url: string;
 }

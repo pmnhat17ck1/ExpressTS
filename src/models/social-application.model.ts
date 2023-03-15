@@ -4,47 +4,41 @@ import { SocialApplicationI } from '@/interfaces/social-application.interface';
 
 export type SocialApplicationCreationAttributes = Optional<
   SocialApplicationI,
-  'id' | 'name' | 'clientId' | 'secretKey'
+  'name' | 'client_id' | 'client_secret'
 >;
 
 export class SocialApplication
   extends Model<SocialApplicationI, SocialApplicationCreationAttributes>
   implements SocialApplication
 {
-  public id!: number;
   public name!: string;
-  public clientId!: string;
-  public secretKey!: string;
+  public client_id!: string;
+  public client_secret!: string;
+  public callback_url!: string;
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
-  public static associate = (models: any): any => {
-    SocialApplication.belongsToMany(models.Account, {
-      through: models.SocialAccount,
-      onDelete: 'CASCADE',
-      foreignKey: 'provider_id',
-    });
-  };
+  public static associate = () => {};
   public static hook = () => {};
 }
 
 module.exports = function (sequelize: Sequelize): typeof SocialApplication {
   SocialApplication.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      clientId: {
+      client_id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: false,
+      },
+      client_secret: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      secretKey: {
+      callback_url: {
         type: DataTypes.STRING,
         allowNull: false,
       },
