@@ -1,7 +1,6 @@
 export interface SocialAccountI {
-  id: string;
+  social_id: string;
+  social_app_id: string;
+  extra_data: string;
   account_id: string;
-  provider_id: number;
-  provider_account_id: string;
-  extraData: string;
 }
