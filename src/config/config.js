@@ -1,10 +1,10 @@
 module.exports = {
   development: {
-    username: process.env.POSTGRES_USER||'postgres',
-    password: process.env.POSTGRES_PASSWORD ||'123456',
+    username: process.env.POSTGRES_USER || 'postgres',
+    password: process.env.POSTGRES_PASSWORD || '123456',
     database: process.env.POSTGRES_DB || 'postgres',
     host: process.env.POSTGRES_HOST || 'localhost',
-    port: process.env.POSTGRES_PORT || 5433,
+    port: process.env.POSTGRES_PORT || 5432,
     dialect: 'postgres',
     dialectOptions: {
       bigNumberStrings: true,

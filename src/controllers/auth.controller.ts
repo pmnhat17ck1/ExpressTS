@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
-import { Op } from 'sequelize';
-import { compareSync } from 'bcrypt';
 
-import { LoginAccountDTO, CreateAccountDTO } from '@dtos/account.dto';
+import { CreateAccountDTO, LoginAccountDTO } from '@dtos/account.dto';
 import { AccountI } from '@interfaces/account.interface';
 import { isEmailOrPhone } from '@/utils/util';
-import { jwt, validator } from '@/utils/index';
+import { validator } from '@/utils/index';
 import { response } from '@/utils/response.util';
 import { randomCode, expiredTime } from '@/utils/common.util';
 import { EmailService } from '@/services/systems';
 import db from '@/models';
-const { Account, Token, Country, Role, ForgotPassword } = db;
+const { Account, ForgotPassword } = db;
+import AuthService from '@/services/apis/auth.service';
 
 class AuthController {
+  public authService = new AuthService();
   public logIn = async (req: Request, res: Response): Promise<void> => {
-    const { username, password }: LoginAccountDTO = req.body;
+    const accountData: LoginAccountDTO = req.body;
+    const { username } = accountData;
     const input = { email: '', username: '', phone: '' };
-
     switch (isEmailOrPhone(username)) {
       case 'phone':
         await validator.validates.Empty(req, 'username', 'số điện thoại');
@@ -39,112 +39,17 @@ class AuthController {
       response(res, 422, result);
       return;
     }
+    const dataCustom = {
+      ...accountData,
+      email: input.email,
+      username: input.username,
+
+      phone: input.phone,
+    };
+
     try {
-      const account: AccountI = await Account.findOne({
-        where: {
-          [Op.or]: [
-            { email: input.email },
-            { username: input.username },
-            { phone: input.phone },
-          ],
-        },
-        include: [
-          {
-            model: Country,
-            as: 'country',
-          },
-          {
-            model: Role,
-            as: 'role',
-          },
-        ],
-        attributes: {
-          exclude: [
-            'countryId',
-            'roleId',
-            'CountryId',
-            'RoleId',
-            'created_at',
-            'updated_at',
-            'createdAt',
-            'updatedAt',
-          ],
-        },
-      });
-
-      if (!account) {
-        return response(res, 404);
-      }
-      if (!compareSync(password, account.password)) {
-        return response(res, 401, 'incorrect_password');
-      }
-      let tokenAccess;
-      const tokenAccount = await Token.findOne({
-        where: {
-          account_id: account.id,
-        },
-      });
-      tokenAccess = tokenAccount?.accessToken;
-      const newAccessToken = jwt.generateAccessToken({
-        account_id: account?.id,
-      });
-      const newRefreshToken = jwt.generateRefreshToken({
-        account_id: account?.id,
-      });
-      if (!tokenAccess) {
-        tokenAccount.update({
-          accessToken: newAccessToken,
-        });
-        tokenAccess = newAccessToken;
-      }
-      const payload = jwt.verifyToken(tokenAccess);
-      if (jwt.checkExpiredToken(payload.exp)) {
-        tokenAccount.update({
-          accessToken: newAccessToken,
-        });
-        tokenAccess = newAccessToken;
-      }
-      tokenAccount.save();
-      res.setHeader('Authorization', `Bearer ${tokenAccess}`);
-      res.cookie('refreshToken', newRefreshToken, {
-        httpOnly: true,
-        secure: false,
-        path: '/',
-        sameSite: 'strict',
-      });
-      response(res, 203, account, 'login_success');
-    } catch (error) {
-      response(res, 500, error);
-    }
-  };
-
-  public signUp = async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { email, username, phone, password }: CreateAccountDTO = req.body;
-
-      const newAccount: AccountI = await Account.create({
-        username,
-        email,
-        phone,
-        password,
-        is_active: false,
-        role_id: 2,
-        country_id: 1,
-      });
-
-      const accessToken = jwt.generateAccessToken({
-        account_id: newAccount?.id,
-      });
-      const refreshToken = jwt.generateRefreshToken(
-        { account_id: newAccount?.id },
-        '3h'
-      );
-      await Token.create({
-        account_id: newAccount.id,
-        accessToken,
-        refreshToken,
-        type: 'auth',
-      });
+      const { accessToken, refreshToken, findAccount } =
+        await this.authService.login(dataCustom);
       res.setHeader('Authorization', `Bearer ${accessToken}`);
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
@@ -152,7 +57,19 @@ class AuthController {
         path: '/',
         sameSite: 'strict',
       });
-      response(res, 200, 'signup_success');
+      response(res, 203, findAccount, 'login_success');
+    } catch (error) {
+      response(res, 500, error);
+    }
+  };
+
+  public signUp = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const accountData: CreateAccountDTO = req.body;
+      const signUpAccountData: AccountI = await this.authService.signup(
+        accountData
+      );
+      response(res, 200, signUpAccountData, 'signup_success');
     } catch (error) {
       response(
         res,
