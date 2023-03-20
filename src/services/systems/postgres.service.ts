@@ -15,7 +15,6 @@ export class PostgresService {
   public password = config.POSTGRES_PASSWORD;
   private static instance: PostgresService;
   constructor() {
-    this.initPg();
     this.initSequelize();
   }
   public static getInstance(): PostgresService {
@@ -25,7 +24,7 @@ export class PostgresService {
 
     return PostgresService.instance;
   }
-  public async initPg() {
+  public initPg() {
     this.client = new Client({
       user: this.username,
       database: this.database,
@@ -38,8 +37,16 @@ export class PostgresService {
       .then(() => console.log('Database connected by PG'))
       .catch((err) => console.error('Connect pg database error', err.stack));
   }
-
-  public async initSequelize() {
+  public async sync(params = { force: false }) {
+    await this.sequelize.sync(params);
+  }
+  public endClient() {
+    this.client.end();
+  }
+  public async closeSequelize() {
+    await this.sequelize.close();
+  }
+  public initSequelize() {
     this.sequelize = new Sequelize.Sequelize(
       this.database,
       this.username,
@@ -56,8 +63,8 @@ export class PostgresService {
           freezeTableName: true,
         },
         pool: {
-          min: 0,
           max: 5,
+          min: 0,
         },
         logQueryParameters: config.NODE_ENV === 'development',
         logging: (query, time) => {
@@ -76,15 +83,15 @@ export class PostgresService {
       );
   }
 
-  public async listening(table, callback) {
+  public listening(table, callback) {
     this.client.query(`LISTEN ${table}`);
-    this.client.on('notification', async (msg) => {
+    this.client.on('notification', (msg) => {
       if (msg.channel === table) {
         callback();
       }
     });
   }
-  public async unListen(table) {
+  public unListen(table) {
     this.client.query(`UNLISTEN ${table}`);
   }
 }

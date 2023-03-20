@@ -27,9 +27,7 @@ class App {
     this.env = config.NODE_ENV || 'development';
     this.version = config.APP_VERSION || 'default';
     this.port = config.PORT || 8000;
-    this.routes = new GetRoutes();
-    this.syncDatabase();
-    this.syncAssociations();
+    this.connectToDatabase();
     this.initializeMiddlewares();
     this.initializeRoutes();
     this.initializeSwagger();
@@ -49,12 +47,11 @@ class App {
     return this.app;
   }
 
-  private syncAssociations() {
-    DB.associations();
+  private connectToDatabase() {
+    DB.sync({ force: false });
   }
-
-  private syncDatabase() {
-    DB.sync({ force: true });
+  public closeDatabase() {
+    DB.close();
   }
 
   private initializeMiddlewares() {
@@ -90,7 +87,8 @@ class App {
     this.app.use('*/css', express.static('public/css'));
   }
 
-  private initializeRoutes() {
+  private async initializeRoutes() {
+    const router = await GetRoutes.getInstance().router;
     this.app.get(
       '/*',
       apiLimiter(),
@@ -99,11 +97,7 @@ class App {
         next();
       }
     );
-    this.app.use(
-      `/api/${getAppVersion(this.version)}`,
-      apiLimiter(),
-      this.routes.router
-    );
+    this.app.use(`/api/${getAppVersion(this.version)}`, apiLimiter(), router);
   }
 
   private initializeSwagger() {

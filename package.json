@@ -37,16 +37,20 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "npm run lint",
-      "npm run prettier"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.(ts|js|css)": [
+      "prettier --write",
+      "git add"
+    ],
+    ".ts": [
+      "npm run lint:fix",
+      "npm run lint"
+    ]
   },
   "keywords": [
     "node",

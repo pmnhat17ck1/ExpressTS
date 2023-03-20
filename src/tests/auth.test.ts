@@ -1,71 +1,49 @@
-import bcrypt from 'bcrypt';
-import { Sequelize } from 'sequelize';
 import request from 'supertest';
-import App from '@/app';
-import { CreateUserDto } from '@dtos/users.dto';
-import AuthRoute from '@routes/auth.route';
 
+import App from '../app';
+import { CreateAccountDTO } from '../dtos/account.dto';
+import { AuthRoute } from '../routes/auth.route';
+let app;
+beforeAll(async () => {
+  app = new App();
+});
 afterAll(async () => {
-  await new Promise<void>(resolve => setTimeout(() => resolve(), 500));
+  await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
+  await app.closeDatabase();
 });
 
 describe('Testing Auth', () => {
+  afterAll(async () => {
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), 500));
+  });
   describe('[POST] /signup', () => {
-    it('response should have the Create userData', async () => {
-      const userData: CreateUserDto = {
-        email: 'test@email.com',
-        password: 'q1w2e3r4!',
+    it('response should have the Create Account', async () => {
+      const account: CreateAccountDTO = {
+        username: 'namnhatwtf',
+        email: 'ghetsuphanboi@gmail.com',
+        password: 'Admin@admin123',
+        phone: '0386487071',
       };
-
       const authRoute = new AuthRoute();
-      const users = authRoute.authController.authService.users;
-
-      users.findOne = jest.fn().mockReturnValue(null);
-      users.create = jest.fn().mockReturnValue({
+      const Account = authRoute.authController.authService.Account;
+      Account.findOne = jest.fn().mockReturnValue(null);
+      Account.create = jest.fn().mockReturnValue({
         id: 1,
-        email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
+        email: account.email,
+        phone: account.phone,
+        username: account.username,
+        password: account.password,
       });
-
-      (Sequelize as any).authenticate = jest.fn();
-      const app = new App([authRoute]);
-      return request(app.getServer()).post(`${authRoute.path}signup`).send(userData).expect(201);
+      const res = await request(app.getServer())
+        .post('/api/v1/auth/signup')
+        .send({
+          email: account.email,
+          phone: account.phone,
+          username: account.username,
+          password: account.password,
+        });
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.message).toEqual('signup_successfully');
     });
   });
-
-  describe('[POST] /login', () => {
-    it('response should have the Set-Cookie header with the Authorization token', async () => {
-      const userData: CreateUserDto = {
-        email: 'test@email.com',
-        password: 'q1w2e3r4!',
-      };
-
-      const authRoute = new AuthRoute();
-      const users = authRoute.authController.authService.users;
-
-      users.findOne = jest.fn().mockReturnValue({
-        id: 1,
-        email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
-      });
-
-      (Sequelize as any).authenticate = jest.fn();
-      const app = new App([authRoute]);
-      return request(app.getServer())
-        .post(`${authRoute.path}login`)
-        .send(userData)
-        .expect('Set-Cookie', /^Authorization=.+/);
-    });
-  });
-
-  // describe('[POST] /logout', () => {
-  //   it('logout Set-Cookie Authorization=; Max-age=0', async () => {
-  //     const authRoute = new AuthRoute();
-
-  //     const app = new App([authRoute]);
-  //     return request(app.getServer())
-  //       .post(`${authRoute.path}logout`)
-  //       .expect('Set-Cookie', /^Authorization=\;/);
-  //   });
-  // });
 });

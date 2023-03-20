@@ -20,27 +20,29 @@ try {
       const model = require(path.join(__dirname, file))(sequelize);
       models[model.name] = model;
     });
-} catch (error) {
-  logger.error(error);
-}
-
-const associations = () => {
+  // associations
   Object.keys(models).forEach((modelName) => {
     if (models[modelName].associate) {
       models[modelName].associate(models);
       models[modelName].hook(models) || null;
     }
   });
-};
+} catch (error) {
+  logger.error(error);
+}
 
 const sync = (params) => {
   sequelize.sync(params);
 };
 
+const close = () => {
+  sequelize.close();
+};
+
 const DB = {
   ...models,
-  associations,
   sync,
+  close,
   sequelize, // connection instance (RAW queries)
   Sequelize, // library
 };

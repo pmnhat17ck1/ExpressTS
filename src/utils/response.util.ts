@@ -103,6 +103,11 @@ export const statusRes = (status: number) => {
 
   return response;
 };
+export const accountRes = (ob: any): any => {
+  // eslint-disable-next-line no-unused-vars
+  const { password, ...accountNew } = ob ?? {};
+  return accountNew;
+};
 
 export const response = (
   res: any,

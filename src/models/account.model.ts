@@ -89,6 +89,9 @@ export class Account
       models.Profile.create({
         account_id: user.id,
       });
+      models.Token.create({
+        account_id: user.id,
+      });
     });
   };
 }
