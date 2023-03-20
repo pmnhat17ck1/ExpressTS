@@ -43,13 +43,9 @@
     }
   },
   "lint-staged": {
-    "*.(ts|js|css)": [
-      "prettier --write",
-      "git add"
-    ],
-    ".ts": [
-      "npm run lint:fix",
-      "npm run lint"
+    "src/**/*.{js,ts,json,css,md}": [
+      "npm run lint",
+      "npm run prettier"
     ]
   },
   "keywords": [
