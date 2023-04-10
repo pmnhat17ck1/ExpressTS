@@ -129,12 +129,9 @@ export const response = (
     data?.message && (jsonData.message = data?.message);
     const dataTemp = { ...data };
     delete dataTemp['message'];
-    const valueData = Object.values(data) || [];
     data?.data && (jsonData.data = { ...dataTemp });
-    if (valueData.length !== 0) {
-      jsonData.message = message || jsonData.message;
-      jsonData.data = valueData[0];
-    }
+    jsonData.message = message || jsonData.message;
+    jsonData.data = data;
   }
   if (isArray(data)) {
     const getErrorFirst = data?.filter((item) => item?.message)[0]?.message;

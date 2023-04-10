@@ -21,6 +21,7 @@ class App {
   public version: string;
   public port: string | number;
   public routes: any;
+  private static instance: App;
 
   constructor() {
     this.app = express();
@@ -32,6 +33,13 @@ class App {
     this.initializeRoutes();
     this.initializeSwagger();
     this.initializeErrorHandling();
+  }
+
+  public static getInstance(): App {
+    if (!App.instance) {
+      App.instance = new App();
+    }
+    return App.instance;
   }
 
   public listen() {

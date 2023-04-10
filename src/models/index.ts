@@ -39,6 +39,10 @@ const close = () => {
   sequelize.close();
 };
 
+process.on('exit', () => {
+  sequelize.close();
+});
+
 const DB = {
   ...models,
   sync,

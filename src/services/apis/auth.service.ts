@@ -10,7 +10,6 @@ import { randomCode, expiredTime } from '@/utils/common.util';
 import { EmailService } from '@/services/systems';
 class AuthService extends ServiceApis {
   public async signup(accountData: CreateAccountDTO): Promise<AccountI> {
-    if (isEmpty(accountData)) throw new HttpException(400, 'userData is empty');
     const { findAccount } = await this.findAccount(accountData);
     if (findAccount) {
       throw new HttpException(409, 'Already exists');
@@ -30,8 +29,6 @@ class AuthService extends ServiceApis {
     accessToken: string;
     findAccount: AccountI;
   }> {
-    if (isEmpty(accountData))
-      throw new HttpException(400, 'accountData is empty');
     const { findAccount } = await this.findAccount(accountData);
     if (!findAccount) {
       throw new HttpException(404, 'Not found');
@@ -68,7 +65,7 @@ class AuthService extends ServiceApis {
       });
       tokenAccess = newAccessToken;
     }
-    tokenAccount.save();
+    tokenAccount?.save();
     return {
       accessToken: newAccessToken,
       refreshToken: newRefreshToken,

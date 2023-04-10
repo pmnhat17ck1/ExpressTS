@@ -4,7 +4,7 @@ import { CreateAccountDTO } from '@dtos/account.dto';
 import { AccountI } from '@interfaces/account.interface';
 import { isEmailOrPhone } from '@/utils/util';
 import { validator } from '@/utils/index';
-import { accountRes, response } from '@/utils/response.util';
+import { response } from '@/utils/response.util';
 import AuthService from '@/services/apis/auth.service';
 
 class AuthController {
@@ -56,7 +56,7 @@ class AuthController {
         path: '/',
         sameSite: 'strict',
       });
-      response(res, 200, accountRes(findAccount), 'login_successfully');
+      response(res, 200, findAccount, 'login_successfully');
     } catch (error) {
       next(error);
     }
@@ -72,7 +72,7 @@ class AuthController {
       const signUpAccountData: AccountI = await this.authService.signup(
         accountData
       );
-      response(res, 200, accountRes(signUpAccountData), 'signup_successfully');
+      response(res, 200, signUpAccountData, 'signup_successfully');
     } catch (error) {
       next(error);
     }
