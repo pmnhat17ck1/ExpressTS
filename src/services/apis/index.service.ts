@@ -1,6 +1,7 @@
 import { Op } from 'sequelize';
 
 import DB from '@models/index';
+import { AccountI } from '@interfaces/account.interface';
 
 class ServiceApis {
   public Account = DB.Account;
@@ -8,6 +9,13 @@ class ServiceApis {
   public Country = DB.Country;
   public Role = DB.Role;
   public ForgotPassword = DB.ForgotPassword;
+
+  public async getAllAccount(): Promise<AccountI> {
+    const accounts: AccountI = await this.Account.findAll({
+      where: {},
+    });
+    return accounts;
+  }
   public async findAccount(accountData): Promise<{ findAccount }> {
     const findAccount = await this.Account.findOne({
       where: {

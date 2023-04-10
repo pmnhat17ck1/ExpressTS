@@ -23,6 +23,8 @@ class CreateAccountDTO {
 }
 
 class UpdateAccountDTO extends CreateAccountDTO {
+  @IsString()
+  public account_id: string;
   @IsBoolean()
   public is_active: boolean | null;
 }

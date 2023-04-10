@@ -2,19 +2,16 @@ import { Request, Response } from 'express';
 
 import { CreateAccountDTO, UpdateAccountDTO } from '@/dtos/account.dto';
 import { AccountI } from '@/interfaces/account.interface';
-import { jwt } from '@/utils/index';
 import { response } from '@/utils/response.util';
+import accountService from '@/services/apis/account.service';
 
-import db from '@/models';
-const { Account, Token, Country, Role } = db;
 //products/:id/ratings
 class AccountController {
+  public accountService = new accountService();
   // admin
   public getAllAccount = async (req: any, res: Response): Promise<void> => {
     try {
-      const accounts: AccountI = await Account.findAll({
-        where: {},
-      });
+      const accounts: AccountI = await this.accountService.getAllAccount();
       response(res, 200, accounts, 'successfully');
     } catch (error) {
       response(res, 500);
@@ -24,33 +21,9 @@ class AccountController {
   public getAccountById = async (req: any, res: Response): Promise<void> => {
     try {
       const account_id = req.params.account_id;
-      const account: AccountI = await Account.findByPk(account_id, {
-        include: [
-          {
-            model: Country,
-            as: 'country',
-          },
-          {
-            model: Role,
-            as: 'role',
-          },
-        ],
-
-        attributes: {
-          exclude: [
-            'password',
-            'countryId',
-            'roleId',
-            'CountryId',
-            'RoleId',
-            'createdAt',
-            'updatedAt',
-          ],
-        },
-      });
-      if (!account) {
-        return response(res, 404);
-      }
+      const account: AccountI = await this.accountService.getAccountById(
+        account_id
+      );
       response(res, 200, account, 'successfully');
     } catch (error) {
       response(res, 500);
@@ -58,57 +31,23 @@ class AccountController {
   };
   public createAccount = async (req: any, res: Response): Promise<void> => {
     try {
-      const { email, username, phone, password }: CreateAccountDTO = req.body;
-
-      const newAccount: AccountI = await Account.create({
-        username,
-        email,
-        phone,
-        password,
-        role_id: 2,
-        country_id: 1,
-      });
-
-      const accessToken = jwt.generateAccessToken({
-        account_id: newAccount?.id,
-      });
-      const refreshToken = jwt.generateRefreshToken(
-        { account_id: newAccount?.id },
-        '3h'
+      const accountData: CreateAccountDTO = req.body;
+      const account: AccountI = await this.accountService.createAccount(
+        accountData
       );
-      await Token.create({
-        account_id: newAccount.id,
-        accessToken,
-        refreshToken,
-        type: 'account',
-      });
-      response(res, 200, 'signup_success');
+      response(res, 200, account, 'create_success');
     } catch (error) {
       response(res, 500);
     }
   };
   public updateAccount = async (req: any, res: Response): Promise<void> => {
     try {
-      const { email, username, phone, password, is_active }: UpdateAccountDTO =
-        req.body;
+      const accountData: UpdateAccountDTO = req.body;
       const account_id = req.params.account_id;
-      const account: AccountI = await Account.update(
-        {
-          email,
-          username,
-          phone,
-          password,
-          is_active,
-        },
-        {
-          where: {
-            id: account_id,
-          },
-        }
-      );
-      if (!account) {
-        return response(res, 404);
-      }
+      const account: AccountI = await this.accountService.updateAccount({
+        ...accountData,
+        account_id,
+      });
       response(res, 200, account, 'successfully');
     } catch (error) {
       response(res, 500);
@@ -117,11 +56,7 @@ class AccountController {
   public deleteAccount = async (req: Request, res: Response): Promise<void> => {
     try {
       const account_id = req.params.account_id;
-      const addressFound = await Account.findByPk(account_id);
-      if (!addressFound) {
-        return response(res, 404);
-      }
-      await addressFound.destroy();
+      await this.accountService.deleteAccount(account_id);
       response(res, 200, 'successfully');
     } catch (error) {
       response(res, 500);
