@@ -1,3 +1,4 @@
+import { HttpException } from '@/exceptions/HttpException';
 import nodemailer from 'nodemailer';
 
 class EmailService {
@@ -28,11 +29,9 @@ class EmailService {
         subject,
         html: message,
       };
-
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent: ${info.messageId}`);
+      await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error(`Error sending email: ${error}`);
+      throw new HttpException(404, "Can't send email");
     }
   }
   // Hàm gửi email với attachment
@@ -50,10 +49,9 @@ class EmailService {
       attachments: [{ filename: attachment.name, content: attachment.content }],
     };
     try {
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent: ${info.messageId}`);
+      await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error(`Error sending email: ${error}`);
+      throw new HttpException(404, "Can't send email");
     }
   };
 
@@ -66,10 +64,9 @@ class EmailService {
       text,
     };
     try {
-      const info = await this.transporter.sendMail(mailOptions);
-      console.log(`Email sent: ${info.messageId}`);
+      await this.transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error(`Error sending email: ${error}`);
+      throw new HttpException(404, "Can't send email");
     }
   };
 }

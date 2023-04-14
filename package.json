@@ -7,17 +7,16 @@
   "scripts": {
     "prepare": "husky install",
     "lint-staged": "lint-staged",
-    "clean": "rm -rf build node_modules yarn-error.log yarn.lock",
-    "prettier": "prettier --write \"src/**/*.{js,ts,json,md}\"",
-    "prettier:check": "prettier --config .prettierrc --check \"src/**/*.{js,ts,json,md}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "prettier": "prettier --config .prettierrc --check \"src/**/*.{js,ts,json,md}\"",
     "dev": "set NODE_ENV=development && nodemon",
     "prod": "npm run build && set NODE_ENV=production && node build/index.js",
     "build": "swc src -d build --source-maps --copy-files",
     "build:tsc": "tsc && tsc-alias",
     "start": "node build/index.js",
-    "test": "jest --forceExit --detectOpenHandles",
-    "lint:check": "eslint --ignore-path .gitignore --ext src/**/*.{js,ts,json,md}",
-    "lint": "eslint --ignore-path .gitignore --ext src/**/*.{js,ts,json,md} --fix",
+    "test": "jest --forceExit --detectOpenHandles --coverage",
+    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "migrate": "sequelize-cli db:migrate",
     "migrate:dev": "set NODE_ENV=development && sequelize-cli db:migrate",
     "migrate:make": "sequelize-cli migration:generate --name",
@@ -37,16 +36,17 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev"
   },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "npm run lint",
-      "npm run prettier"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,ts,json,css,md}": [
+      "npm run prettier:fix",
+      "npm run lint",
+      "npm run lint:fix"
+    ]
   },
   "keywords": [
     "node",
@@ -66,6 +66,7 @@
     "express": "^4.18.2",
     "express-rate-limit": "^6.7.0",
     "express-validator": "^6.15.0",
+    "faker": "^6.6.6",
     "fs-extra": "^11.1.0",
     "helmet": "^6.0.1",
     "hpp": "^0.2.3",

@@ -14,14 +14,17 @@ class CreateAccountDTO {
   public username: string;
 
   @IsString()
+  @IsStrongPassword({ minLength: 6 })
   public password: string;
 
   @IsString()
   @IsPhoneNumber('VN')
-  public phone: number;
+  public phone: number | string;
 }
 
 class UpdateAccountDTO extends CreateAccountDTO {
+  @IsString()
+  public account_id: string;
   @IsBoolean()
   public is_active: boolean | null;
 }

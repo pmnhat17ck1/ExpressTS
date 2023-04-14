@@ -19,6 +19,11 @@ class AccountRoute implements Routes {
       authenticateAdmin,
       this.accountController.getAllAccount
     );
+    this.router.post(
+      `${this.path}create`,
+      authenticateAdmin,
+      this.accountController.createAccount
+    );
     this.router.get(
       `${this.path}:account_id`,
       authenticateAdmin,

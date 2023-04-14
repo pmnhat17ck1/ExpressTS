@@ -7,7 +7,7 @@ const { Account, SocialAccount, Token } = db;
 import { response } from '@/utils/response.util';
 import { jwt } from '@/utils';
 class SocialAccountController {
-  constructor(parameters) {}
+  constructor() {}
   socialLogin = async (req: Request, res: Response) => {
     try {
       const { provider, socialId, email, phoneNumber } = req.body;
@@ -84,7 +84,7 @@ class SocialAccountController {
       if (linkedSocialAccount) {
         return response(res, 409, 'Social account already linked');
       }
-    await SocialAccount.create({
+      await SocialAccount.create({
         provider,
         social_id,
         account_id: req.account.id,
@@ -96,14 +96,15 @@ class SocialAccountController {
   };
   socialAccounts = async (req: any, res: Response) => {
     try {
-      const socialAccounts = await SocialAccount.findAll({where: {account_id: req.account.id}});
+      const socialAccounts = await SocialAccount.findAll({
+        where: { account_id: req.account.id },
+      });
       return response(res, 200, socialAccounts);
-    } catch (err) {;
+    } catch (err) {
       return response(res, 500);
     }
   };
 }
-
 
 export default {
   SocialAccountController,

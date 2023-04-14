@@ -34,6 +34,6 @@
       "@exceptions/*": ["exceptions/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/config/config.js"],
+  "include": ["src/**/*.ts", "src/**/*.js", ".env", "src/config/config.js"],
   "exclude": ["node_modules", "src/http", "src/logs", "src/tests"]
 }

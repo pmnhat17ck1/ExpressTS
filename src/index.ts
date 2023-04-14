@@ -1,5 +1,3 @@
 import App from '@/app';
-
-const app = new App();
-
+const app = App.getInstance();
 app.listen();

@@ -21,8 +21,8 @@ export class SocialAccount
   public readonly updated_at!: Date;
 
   public static associate = (models) => {
-    SocialAccount.belongsTo(models.SocialApplication,{
-      foreignKey: 'client_id'
+    SocialAccount.belongsTo(models.SocialApplication, {
+      foreignKey: 'client_id',
     });
   };
   public static hook = () => {};
@@ -33,11 +33,11 @@ module.exports = function (sequelize: Sequelize): typeof SocialAccount {
     {
       social_id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       social_app_id: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       extra_data: {
         type: DataTypes.JSON,

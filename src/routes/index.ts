@@ -11,9 +11,15 @@ class GetRoutes implements Routes {
   public todoRoute = new TodoRoute();
   public authRoute = new AuthRoute();
   public accountRoute = new AccountRoute();
-
+  private static instance: GetRoutes;
   constructor() {
     this.initializeRoutes();
+  }
+  public static getInstance(): GetRoutes {
+    if (!GetRoutes.instance) {
+      GetRoutes.instance = new GetRoutes();
+    }
+    return GetRoutes.instance;
   }
   private initializeRoutes() {
     this.router.use('/todos', this.todoRoute.router);
